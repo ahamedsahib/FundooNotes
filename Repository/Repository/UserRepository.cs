@@ -50,7 +50,7 @@ namespace Fundoonotes.Repostiory.Repository
                 }
                 else
                 {
-                    message = "Login failed!!Email or password wrong";
+                    message = "Login failed!!!!!\nEmail or Password wrong";
                 }
                 return message;
             }
@@ -70,7 +70,7 @@ namespace Fundoonotes.Repostiory.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception("Error in base64Encode" + ex.Message);
+                throw new Exception("Error Password Encryption" + ex.Message);
             }
         }
     }
