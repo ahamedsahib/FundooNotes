@@ -48,11 +48,32 @@ namespace Fundoonotes.Controller.Controller
                 string result = this.manager.Login(userData);
                 if (result.Equals("Login Success"))
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "success" });
+                    return this.Ok(new ResponseModel<string>() { status = true, Message = result });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "fail" });
+                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+            }
+        }
+        [HttpGet]
+        [Route("api/forgotpassword")]
+        public IActionResult ForgotPassword(string email)
+        {
+            try
+            {
+                var result = this.manager.ForgotPassword(email);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Check Your Mail" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error !!Email Id Not found Or Incorrect" });
                 }
             }
             catch (Exception ex)

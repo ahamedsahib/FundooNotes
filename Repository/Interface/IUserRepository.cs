@@ -11,5 +11,6 @@ namespace Fundoonotes.Repostiory.Interface
     {
         bool Register(RegisterModel userData);
         string Login(LoginModel userData);
+        bool ForgotPassword(string email);
     }
 }
