@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Models
 {
-    public class LoginModel
+    class ForgetPasswordModel
     {
         [Required]
         public string Email { get; set; }
         [Required]
-        public string Password { get; set; }
+        public string Url { get; set; }
     }
 }
