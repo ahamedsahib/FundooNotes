@@ -9,5 +9,6 @@ namespace Repository.Interface
     {
         string AddNote(NotesModel noteData);
         string DeleteNote(int noteId);
+        string ChangeNoteColor(int noteId, string noteColor);
     }
 }

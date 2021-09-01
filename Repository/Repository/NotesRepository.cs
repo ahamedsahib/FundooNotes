@@ -51,5 +51,24 @@ namespace Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public string ChangeNoteColor(int noteId, string color)
+        {
+            try
+            {
+                var checkNote = this.userContext.Notes.Find(noteId);
+                if (checkNote != null)
+                {
+                    checkNote.Colour = color;
+                    this.userContext.SaveChanges();
+                    return "Color Updated";
+                }
+
+                    return "Note Not Found";
+                }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

@@ -56,5 +56,26 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
             }
         }
+        [HttpPut]
+        [Route("api/changeColor")]
+        public IActionResult ChangeNoteColor(int noteId, string noteColor)
+        {
+            try
+            {
+                string result = this.manager.ChangeNoteColor(noteId, noteColor);
+                if (result.Equals("Color Updated"))
+                {
+                    return this.Ok(new ResponseModel<string>() { status = true, Message = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+            }
+        }
     }
 }
