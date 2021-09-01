@@ -88,5 +88,24 @@
                 throw new Exception(ex.Message);
             }
         }
+        public bool Archive(int noteId)
+        {
+            try
+            {
+                var checkNote = this.userContext.Notes.Find(noteId);
+                if (checkNote != null)
+                {
+                    checkNote.Archive = checkNote.Archive ? false : true;
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

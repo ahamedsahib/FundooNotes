@@ -98,5 +98,26 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
             }
         }
+        [HttpPut]
+        [Route("api/ChangeArchive")]
+        public IActionResult Archive(int noteId)
+        {
+            try
+            {
+                bool result = this.manager.Archive(noteId);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Note Archived" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+            }
+        }
     }
 }
