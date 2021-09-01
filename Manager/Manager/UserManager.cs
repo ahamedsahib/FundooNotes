@@ -26,7 +26,7 @@ namespace Fundoonotes.Manager.Manager
         /// <param name="userData">The user data.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public bool Register(RegisterModel userData)
+        public string Register(RegisterModel userData)
         {
             try
             {

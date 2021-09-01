@@ -31,19 +31,24 @@ namespace Fundoonotes.Repostiory.Repository
         /// <param name="userData">The user data.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public bool Register(RegisterModel userData)
+        public string Register(RegisterModel userData)
         {
             try
             {
-                if (userData != null)
+                var verifyEmail = this.userContext.Users.Where(x => x.Email.Equals(userData.Email)).FirstOrDefault();
+                if (verifyEmail == null)
                 {
+                    if (userData != null)
+                    {
 
-                    userData.Password = EncryptPassword(userData.Password);
-                    this.userContext.Users.Add(userData);
-                    this.userContext.SaveChanges();
-                    return true;
+                        userData.Password = EncryptPassword(userData.Password);
+                        this.userContext.Users.Add(userData);
+                        this.userContext.SaveChanges();
+                        return "Registration Successfull";
+                    }
+                    return "Registraion Unsuccessfull";
                 }
-                return false;
+                return "Email ID already exists";
             }
             catch (Exception ex)
             {

@@ -32,14 +32,14 @@ namespace Fundoonotes.Controller.Controller
         {
             try
             {
-                bool result=this.manager.Register(userData);
-                if (result == true)
+                string result=this.manager.Register(userData);
+                if (result.Equals("Registration Successfull"))
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Registratrion Successfull" });
+                    return this.Ok(new ResponseModel<string>() { status = true, Message = result});
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status =false, Message = "Registratrion UnSuccessfull" });
+                    return this.BadRequest(new ResponseModel<string>() { status =false, Message = result });
                 }
             }
             catch (Exception ex)
