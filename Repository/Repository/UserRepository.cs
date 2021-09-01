@@ -1,6 +1,7 @@
 ﻿using Experimental.System.Messaging;
 using Fundoonotes.Models;
 using Fundoonotes.Repostiory.Interface;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Models;
 using Repository.Context;
@@ -20,10 +21,12 @@ namespace Fundoonotes.Repostiory.Repository
         private readonly UserContext userContext;
 
         //private readonly IConfiguration configuration;
+        private readonly IConfiguration configuration;
 
-        public UserRepository(UserContext userContext)
+        public UserRepository(UserContext userContext, IConfiguration configuration)
         {
             this.userContext = userContext;
+            this.configuration = configuration;
         }
         /// <summary>
         /// Registers the specified user data.
@@ -239,6 +242,22 @@ namespace Fundoonotes.Repostiory.Repository
             {
                 throw new Exception(ex.Message);
             }
+        }
+        public string GenerateToken(string email)
+        {
+            byte[] key = Convert.FromBase64String(this.configuration["SecretKey"]);
+            SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
+            SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] {
+                new Claim(ClaimTypes.Name, email)
+            }),
+                Expires = DateTime.UtcNow.AddMinutes(30),
+                SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
+            };
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            JwtSecurityToken token = handler.CreateJwtSecurityToken(descriptor);
+            return handler.WriteToken(token);
         }
     }
 }

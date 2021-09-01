@@ -13,6 +13,7 @@ namespace Fundoonotes.Manager.Interface
         string Login(UserCredentialModel userData);
         bool ForgotPassword(string email);
         bool ResetPassword(UserCredentialModel userData);
+        string GenerateToken(string email);
 
 
     }

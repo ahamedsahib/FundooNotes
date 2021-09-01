@@ -61,8 +61,8 @@ namespace Fundoonotes.Controller.Controller
                 string result = this.manager.Login(userData);
                 if (result.Equals("Login Success"))
                 {
-                    //string tokenString = this.manager.GenerateToken();
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = result });
+                    string tokenString = this.manager.GenerateToken(userData.Email);
+                    return this.Ok(new { status = true, Message = result, tokenString, userData.Email });
                 }
                 else
                 {
