@@ -1,4 +1,11 @@
-﻿namespace Fundoonotes.Repostiory.Repository
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="UserRepository.cs" company="TVSNext">
+//   Copyright © 2021 Company="TVSNext"
+// </copyright>
+// <creator name="Ahamed"/>
+// ----------------------------------------------------------------------------------------------------------
+
+namespace Fundoonotes.Repostiory.Repository
 {
     using System;
     using System.IdentityModel.Tokens.Jwt;
@@ -13,25 +20,59 @@
     using Microsoft.IdentityModel.Tokens;
     using global::Models;
     using global::Repository.Context;
-   
+
+    /// <summary>
+    /// user repository class
+    /// </summary>
+    /// <seealso cref="Fundoonotes.Repostiory.Interface.IUserRepository" />
     public class UserRepository : IUserRepository
     {
+        /// <summary>
+        /// The user context
+        /// </summary>
         private readonly UserContext userContext;
 
-        //private readonly IConfiguration configuration;
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly IConfiguration configuration;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserRepository"/> class.
+        /// </summary>
+        /// <param name="userContext">The user context.</param>
+        /// <param name="configuration">The configuration.</param>
         public UserRepository(UserContext userContext, IConfiguration configuration)
         {
             this.userContext = userContext;
             this.configuration = configuration;
         }
+
+        /// <summary>
+        /// Encrypts the password.
+        /// </summary>
+        /// <param name="password">The password.</param>
+        /// <returns>encrypted data</returns>
+        public static string EncryptPassword(string password)
+        {
+            try
+            {
+                byte[] encData_byte = new byte[password.Length];
+                encData_byte = System.Text.Encoding.UTF8.GetBytes(password);
+                string encodedData = Convert.ToBase64String(encData_byte);
+                return encodedData;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Password Encryption" + ex.Message);
+            }
+        }
+
         /// <summary>
         /// Registers the specified user data.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>registration is successful or not</returns>
         public string Register(RegisterModel userData)
         {
             try
@@ -41,28 +82,28 @@
                 {
                     if (userData != null)
                     {
-
                         userData.Password = EncryptPassword(userData.Password);
                         this.userContext.Users.Add(userData);
                         this.userContext.SaveChanges();
                         return "Registration Successfull";
                     }
+
                     return "Registraion Unsuccessfull";
                 }
+
                 return "Email ID already exists";
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
         }
+       
         /// <summary>
         /// Logins the specified user data.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>user email and password correct or wrong</returns> 
         public string Login(UserCredentialModel userData)
         {
             try
@@ -78,6 +119,7 @@
                 {
                     message = "Login failed!!!!!\nEmail or Password wrong";
                 }
+
                 return message;
             }
             catch (Exception ex)
@@ -85,32 +127,12 @@
                 throw new Exception(ex.Message);
             }
         }
+        
         /// <summary>
-        /// Encrypts the password.
-        /// </summary>
-        /// <param name="password">The password.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Error Password Encryption" + ex.Message</exception>
-        public static string EncryptPassword(string password)
-        {
-            try
-            {
-                byte[] encData_byte = new byte[password.Length];
-                encData_byte = System.Text.Encoding.UTF8.GetBytes(password);
-                string encodedData = Convert.ToBase64String(encData_byte);
-                return encodedData;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error Password Encryption" + ex.Message);
-            }
-        }
-        /// <summary>
-        /// Forgots the password.
+        /// Forgot the password.
         /// </summary>
         /// <param name="email">The email.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>email id exists or not</returns>
         public bool ForgotPassword(string email)
         {
             try
@@ -119,28 +141,26 @@
                 if (verifyEmail != null)
                 {
                     string url = string.Empty;
-                    SendToMSMQ(email, "wwww.passwordreset.com");
+                    SendToMSMQ("wwww.passwordreset.com");
                     bool result = SendEmail(email);
                     return result;
                 }
+
                 return false;
-                
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
-
         }
+       
         /// <summary>
         /// Sends to MSMQ.
         /// </summary>
         /// <param name="email">The email.</param>
         /// <param name="url">The URL.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
-        public bool SendToMSMQ(string email,string url)
+        /// <returns>return true if message exists</returns>
+        public bool SendToMSMQ(string url)
         {
             MessageQueue msqueue;
 
@@ -160,18 +180,19 @@
                 msqueue.Label = "url Link";
                 msqueue.Send(message);
                 return true;
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }
 
         }
+
         /// <summary>
         /// Receives the message.
         /// </summary>
         /// <param name="email">The email.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>url to reset password</returns>
         public string ReceiveMessage()
         {
             try
@@ -188,13 +209,13 @@
             }
 
         }
+      
         /// <summary>
         /// Sends the mail.
         /// </summary>
         /// <param name="email">The email.</param>
         /// <param name="url">The URL.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>mail to clinet</returns>
         public bool SendEmail(string email)
         {
             try
@@ -216,12 +237,12 @@
                 throw new Exception(ex.Message);
             }
         }
+       
         /// <summary>
         /// Resets the password.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>password updated or not</returns>
         public bool ResetPassword(UserCredentialModel userData)
         {
             try
@@ -233,28 +254,27 @@
                     this.userContext.SaveChanges();
                     return true;
                 }
-                return false;
-                
+
+                return false;           
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+       
         /// <summary>
         /// Generates the token.
         /// </summary>
         /// <param name="email">The email.</param>
-        /// <returns></returns>
+        /// <returns>generated token</returns>
         public string GenerateToken(string email)
         {
             byte[] key = Convert.FromBase64String(this.configuration["SecretKey"]);
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Name, email)
-            }),
+                Subject = new ClaimsIdentity(new[] {new Claim(ClaimTypes.Name, email)}),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
             };

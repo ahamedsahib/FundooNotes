@@ -2,9 +2,6 @@
 using Repository.Context;
 using Repository.Interface;
 using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace Repository.Repository
 {
     public class NotesRepository : INotesRepository
@@ -33,7 +30,26 @@ namespace Repository.Repository
             {
                 throw new Exception(ex.Message);
             }
+        }
 
+        public string DeleteNote(int noteId)
+        {
+            try
+            {
+                var checkId = this.userContext.Notes.Find(noteId);
+                if (checkId != null)
+                {
+                    this.userContext.Notes.Remove(checkId);
+                    this.userContext.SaveChanges();
+                    return "Note Deleted Successfully";
+                }
+
+                return "Note not Present";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

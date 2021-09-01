@@ -1,48 +1,60 @@
-﻿using Fundoonotes.Manager.Interface;
-using Fundoonotes.Models;
-using Fundoonotes.Repostiory.Interface;
-using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="UserManager.cs" company="TVSNext">
+//   Copyright © 2021 Company="TVSNext"
+// </copyright>
+// <creator name="Ahamed"/>
+// ----------------------------------------------------------------------------------------------------------
 
 namespace Fundoonotes.Manager.Manager
 {
+    using System;
+    using Fundoonotes.Manager.Interface;
+    using Fundoonotes.Models;
+    using Fundoonotes.Repostiory.Interface;
+    using global::Models;
+
+    /// <summary>
+    /// User Manager
+    /// </summary>
+    /// <seealso cref="Fundoonotes.Manager.Interface.IUserManager" />
     public class UserManager : IUserManager
     {
         /// <summary>
         /// The repository
         /// </summary>
         private readonly IUserRepository repository;
-
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserManager"/> class.
+        /// </summary>
+        /// <param name="repository">The repository.</param>
         public UserManager(IUserRepository repository)
         {
             this.repository = repository;
         }
+
         /// <summary>
         /// Registers the specified user data.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
-        public string Register(RegisterModel userData)
+        /// <returns>if registration is success or not</returns>
+         public string Register(RegisterModel userData)
         {
             try
             {
                 return this.repository.Register(userData);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }  
         }
+        
         /// <summary>
         /// Logins the specified user data.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>user email and password correct or wrong</returns> 
         public string Login(UserCredentialModel userData)
         {
             try
@@ -54,13 +66,13 @@ namespace Fundoonotes.Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
+
         /// <summary>
-        /// Forgots the password.
+        /// Forgot the password.
         /// </summary>
         /// <param name="email">The email.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
-        public bool ForgotPassword(string email)
+        /// <returns>email id exists or not</returns>
+         public bool ForgotPassword(string email)
         {
             try
             {
@@ -71,12 +83,12 @@ namespace Fundoonotes.Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
+
         /// <summary>
         /// Resets the password.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>Password update or not</returns>
         public bool ResetPassword(UserCredentialModel userData)
         {
             try
@@ -88,8 +100,13 @@ namespace Fundoonotes.Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
-
-        public string GenerateToken(string email)
+        
+        /// <summary>
+        /// Generates the token.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns>generate token</returns>
+         public string GenerateToken(string email)
         {
             try
             {

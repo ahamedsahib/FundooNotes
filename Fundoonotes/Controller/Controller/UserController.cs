@@ -28,7 +28,8 @@ namespace Fundoonotes.Controller.Controller
         /// Registers the specified user data.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
+        /// <returns>successfully user registerd or not</returns>
+        
         [HttpPost]
         [Route("api/register")]
         public IActionResult Register([FromBody]RegisterModel userData)
@@ -50,11 +51,13 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
             }
         }
+        
         /// <summary>
         /// Logins the specified user data.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
+        /// <returns>user logged in or not</returns>
+        
         [HttpPost]
         [Route("api/login")]
         public IActionResult Login([FromBody] UserCredentialModel userData)
@@ -77,11 +80,13 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
             }
         }
+        
         /// <summary>
-        /// Forgots the password.
+        /// Forgot the password.
         /// </summary>
         /// <param name="email">The email.</param>
-        /// <returns></returns>
+        /// <returns>email id is exists or not</returns>
+        
         [HttpGet]
         [Route("api/forgotpassword")]
         public IActionResult ForgotPassword(string email)
@@ -103,6 +108,13 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
             }
         }
+
+
+        /// <summary>
+        /// Resets the password.
+        /// </summary>
+        /// <param name="userData">The user data.</param>
+        /// <returns>password update or not</returns>
 
         [HttpPut]
         [Route("api/resetpassword")]

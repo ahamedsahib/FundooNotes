@@ -9,6 +9,7 @@
         [Key]
         public int NoteId { get; set; }
 
+        [Required]
         [ForeignKey("RegisterModel")]
         public int UserId { get; set; }
         public virtual RegisterModel RegisterModel { get; set; }
@@ -18,7 +19,8 @@
         
         [DefaultValue(false)]
         public bool Archive { get; set; }
-        public string Colour { get; set; }
+        public string Colour { get; set; } = "white";
+
         public string Image { get; set; }
         [DefaultValue(false)]
         public bool Trash { get; set; }
