@@ -1,21 +1,19 @@
-﻿using Experimental.System.Messaging;
-using Fundoonotes.Models;
-using Fundoonotes.Repostiory.Interface;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Models;
-using Repository.Context;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
-namespace Fundoonotes.Repostiory.Repository
+﻿namespace Fundoonotes.Repostiory.Repository
 {
+    using System;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Mail;
+    using System.Security.Claims;
+    using Experimental.System.Messaging;
+    using Fundoonotes.Models;
+    using Fundoonotes.Repostiory.Interface;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Tokens;
+    using global::Models;
+    using global::Repository.Context;
+   
     public class UserRepository : IUserRepository
     {
         private readonly UserContext userContext;
@@ -122,7 +120,7 @@ namespace Fundoonotes.Repostiory.Repository
                 {
                     string url = string.Empty;
                     SendToMSMQ(email, "wwww.passwordreset.com");
-                    bool result = ReceiveMessage(email);
+                    bool result = SendEmail(email);
                     return result;
                 }
                 return false;
@@ -174,7 +172,7 @@ namespace Fundoonotes.Repostiory.Repository
         /// <param name="email">The email.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public bool ReceiveMessage(string email)
+        public string ReceiveMessage()
         {
             try
             {
@@ -182,7 +180,7 @@ namespace Fundoonotes.Repostiory.Repository
                 var receiveMsg = receiveQueue.Receive();
                 receiveMsg.Formatter = new BinaryMessageFormatter();
                 string linkToSend = receiveMsg.Body.ToString();
-                return SendMail(email, linkToSend);
+                return linkToSend;
             }
             catch (Exception ex)
             {
@@ -197,7 +195,7 @@ namespace Fundoonotes.Repostiory.Repository
         /// <param name="url">The URL.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public bool SendMail(string email, string url)
+        public bool SendEmail(string email)
         {
             try
             {
@@ -206,7 +204,7 @@ namespace Fundoonotes.Repostiory.Repository
                 mail.From = new MailAddress("adsahib39@gmail.com");
                 mail.To.Add(email);
                 mail.Subject = "Reset your password";
-                mail.Body = $"Click this link to reset your password\n{url}";
+                mail.Body = $"Click this link to reset your password\n{this.ReceiveMessage()}";
                 SmtpServer.Port = 587;
                 SmtpServer.Credentials = new NetworkCredential("adsahib39@gmail.com", "password");
                 SmtpServer.EnableSsl = true;
@@ -243,6 +241,11 @@ namespace Fundoonotes.Repostiory.Repository
                 throw new Exception(ex.Message);
             }
         }
+        /// <summary>
+        /// Generates the token.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns></returns>
         public string GenerateToken(string email)
         {
             byte[] key = Convert.FromBase64String(this.configuration["SecretKey"]);

@@ -2,6 +2,8 @@ using Fundoonotes.Manager.Interface;
 using Fundoonotes.Manager.Manager;
 using Fundoonotes.Repostiory.Interface;
 using Fundoonotes.Repostiory.Repository;
+using Manager.Interface;
+using Manager.Manager;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -10,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Repository.Context;
+using Repository.Interface;
+using Repository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +38,8 @@ namespace Fundoonotes
                 options => options.UseSqlServer(this.Configuration.GetConnectionString("UserDbConnection")));
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<INotesRepository, NotesRepository>();
+            services.AddTransient<INotesManager, NotesManager>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

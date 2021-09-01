@@ -1,12 +1,8 @@
-﻿using Fundoonotes.Models;
-using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Fundoonotes.Manager.Interface
+﻿namespace Fundoonotes.Manager.Interface
 {
+    using Fundoonotes.Models;
+    using global::Models;
+
     public interface IUserManager
     {
         string Register(RegisterModel userData);

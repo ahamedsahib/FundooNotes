@@ -1,14 +1,17 @@
-﻿using Fundoonotes.Manager.Interface;
-using Fundoonotes.Models;
-using Microsoft.AspNetCore.Mvc;
-using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="UserController.cs" company="TVSNext">
+//   Copyright © 2021 Company="TVSNext"
+// </copyright>
+// <creator name="Ahamed"/>
+// ----------------------------------------------------------------------------------------------------------
 namespace Fundoonotes.Controller.Controller
 {
+    using System;
+    using Fundoonotes.Manager.Interface;
+    using Fundoonotes.Models;
+    using Microsoft.AspNetCore.Mvc;
+    using global::Models;
+
     public class UserController: ControllerBase
     {
         /// <summary>
