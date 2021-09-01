@@ -57,19 +57,40 @@ namespace Fundoonotes.Controller.Controller
             }
         }
         [HttpPut]
-        [Route("api/changeColor")]
+        [Route("api/changeColour")]
         public IActionResult ChangeNoteColor(int noteId, string noteColor)
         {
             try
             {
                 string result = this.manager.ChangeNoteColor(noteId, noteColor);
-                if (result.Equals("Color Updated"))
+                if (result.Equals("Colour Updated"))
                 {
                     return this.Ok(new ResponseModel<string>() { status = true, Message = result });
                 }
                 else
                 {
                     return this.BadRequest(new ResponseModel<string>() { status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+            }
+        }
+        [HttpPut]
+        [Route("api/changePin")]
+        public IActionResult ChangePin(int noteId)
+        {
+            try
+            {
+                bool result = this.manager.ChangePin(noteId);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Pin Toggled" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)

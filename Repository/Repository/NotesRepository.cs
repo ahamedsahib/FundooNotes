@@ -1,9 +1,9 @@
-﻿using Models;
-using Repository.Context;
-using Repository.Interface;
-using System;
-namespace Repository.Repository
+﻿namespace Repository.Repository
 {
+    using System;
+    using Models;
+    using global::Repository.Context;
+    using global::Repository.Interface;
     public class NotesRepository : INotesRepository
     {
         private readonly UserContext userContext;
@@ -51,20 +51,38 @@ namespace Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
-        public string ChangeNoteColor(int noteId, string color)
+        public string ChangeNoteColor(int noteId, string notecolor)
         {
             try
             {
                 var checkNote = this.userContext.Notes.Find(noteId);
                 if (checkNote != null)
                 {
-                    checkNote.Colour = color;
+                    checkNote.Colour = notecolor;
                     this.userContext.SaveChanges();
-                    return "Color Updated";
+                    return "Colour Updated";
                 }
 
-                    return "Note Not Found";
+                    return "Error!! Colour not updated ";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool ChangePin(int noteId)
+        {
+            try
+            {
+                var checkNote = this.userContext.Notes.Find(noteId);
+                if (checkNote != null)
+                {
+                    checkNote.Pin = checkNote.Pin ? false : true;
+                    this.userContext.SaveChanges();
+                    return true;
                 }
+                return false;
+            }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);

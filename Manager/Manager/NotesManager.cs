@@ -49,5 +49,16 @@ namespace Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
+        public bool ChangePin(int noteId)
+        {
+            try
+            {
+                return this.repository.ChangePin(noteId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
