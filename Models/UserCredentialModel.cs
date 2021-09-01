@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Models
 {
-    public class LoginModel
+    public class UserCredentialModel
     {
         [Required]
         public string Email { get; set; }

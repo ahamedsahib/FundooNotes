@@ -11,12 +11,21 @@ namespace Fundoonotes.Manager.Manager
 {
     public class UserManager : IUserManager
     {
+        /// <summary>
+        /// The repository
+        /// </summary>
         private readonly IUserRepository repository;
 
         public UserManager(IUserRepository repository)
         {
             this.repository = repository;
         }
+        /// <summary>
+        /// Registers the specified user data.
+        /// </summary>
+        /// <param name="userData">The user data.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public bool Register(RegisterModel userData)
         {
             try
@@ -28,7 +37,13 @@ namespace Fundoonotes.Manager.Manager
                 throw new Exception(ex.Message);
             }  
         }
-        public string Login(LoginModel userData)
+        /// <summary>
+        /// Logins the specified user data.
+        /// </summary>
+        /// <param name="userData">The user data.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
+        public string Login(UserCredentialModel userData)
         {
             try
             {
@@ -39,6 +54,12 @@ namespace Fundoonotes.Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
+        /// <summary>
+        /// Forgots the password.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public bool ForgotPassword(string email)
         {
             try
@@ -50,6 +71,22 @@ namespace Fundoonotes.Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
-
+        /// <summary>
+        /// Resets the password.
+        /// </summary>
+        /// <param name="userData">The user data.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
+        public bool ResetPassword(UserCredentialModel userData)
+        {
+            try
+            {
+                return this.repository.ResetPassword(userData);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

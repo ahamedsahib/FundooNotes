@@ -1,13 +1,16 @@
 ﻿using Experimental.System.Messaging;
 using Fundoonotes.Models;
 using Fundoonotes.Repostiory.Interface;
+using Microsoft.IdentityModel.Tokens;
 using Models;
 using Repository.Context;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Fundoonotes.Repostiory.Repository
@@ -16,10 +19,18 @@ namespace Fundoonotes.Repostiory.Repository
     {
         private readonly UserContext userContext;
 
+        //private readonly IConfiguration configuration;
+
         public UserRepository(UserContext userContext)
         {
             this.userContext = userContext;
         }
+        /// <summary>
+        /// Registers the specified user data.
+        /// </summary>
+        /// <param name="userData">The user data.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public bool Register(RegisterModel userData)
         {
             try
@@ -40,7 +51,13 @@ namespace Fundoonotes.Repostiory.Repository
             }
 
         }
-        public string Login(LoginModel userData)
+        /// <summary>
+        /// Logins the specified user data.
+        /// </summary>
+        /// <param name="userData">The user data.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
+        public string Login(UserCredentialModel userData)
         {
             try
             {
@@ -62,6 +79,12 @@ namespace Fundoonotes.Repostiory.Repository
                 throw new Exception(ex.Message);
             }
         }
+        /// <summary>
+        /// Encrypts the password.
+        /// </summary>
+        /// <param name="password">The password.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Error Password Encryption" + ex.Message</exception>
         public static string EncryptPassword(string password)
         {
             try
@@ -76,6 +99,12 @@ namespace Fundoonotes.Repostiory.Repository
                 throw new Exception("Error Password Encryption" + ex.Message);
             }
         }
+        /// <summary>
+        /// Forgots the password.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public bool ForgotPassword(string email)
         {
             try
@@ -84,14 +113,12 @@ namespace Fundoonotes.Repostiory.Repository
                 if (verifyEmail != null)
                 {
                     string url = string.Empty;
-                    SendToMSMQ(email, "www.google.com");
+                    SendToMSMQ(email, "wwww.passwordreset.com");
                     bool result = ReceiveMessage(email);
                     return result;
                 }
-                else
-                {
-                    return false;
-                }
+                return false;
+                
             }
             catch (Exception ex)
             {
@@ -100,6 +127,13 @@ namespace Fundoonotes.Repostiory.Repository
 
 
         }
+        /// <summary>
+        /// Sends to MSMQ.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <param name="url">The URL.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public bool SendToMSMQ(string email,string url)
         {
             MessageQueue msqueue;
@@ -126,6 +160,12 @@ namespace Fundoonotes.Repostiory.Repository
             }
 
         }
+        /// <summary>
+        /// Receives the message.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public bool ReceiveMessage(string email)
         {
             try
@@ -142,21 +182,53 @@ namespace Fundoonotes.Repostiory.Repository
             }
 
         }
+        /// <summary>
+        /// Sends the mail.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <param name="url">The URL.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public bool SendMail(string email, string url)
         {
             try
             {
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-                mail.From = new MailAddress("cristianomessicrlm0730@gmail.com");
+                mail.From = new MailAddress("adsahib39@gmail.com");
                 mail.To.Add(email);
                 mail.Subject = "Reset your password";
                 mail.Body = $"Click this link to reset your password\n{url}";
                 SmtpServer.Port = 587;
-                SmtpServer.Credentials = new NetworkCredential("cristianomessicrlm0730@gmail.com", "CristianoMessi0730");
+                SmtpServer.Credentials = new NetworkCredential("adsahib39@gmail.com", "password");
                 SmtpServer.EnableSsl = true;
                 SmtpServer.Send(mail);
                 return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        /// <summary>
+        /// Resets the password.
+        /// </summary>
+        /// <param name="userData">The user data.</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
+        public bool ResetPassword(UserCredentialModel userData)
+        {
+            try
+            {
+                var userDetails = this.userContext.Users.Where(x => x.Email.Equals(userData.Email)).FirstOrDefault();
+                if (userDetails != null)
+                {
+                    userDetails.Password = EncryptPassword(userData.Password);
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+                return false;
+                
             }
             catch (Exception ex)
             {
