@@ -71,5 +71,27 @@ namespace Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
-    }
+        public bool MoveToTrash(int noteId)
+        {
+            try
+            {
+                return this.repository.MoveToTrash(noteId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool RestoreNote(int noteId)
+        {
+            try
+            {
+                return this.repository.MoveToTrash(noteId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+     }
 }

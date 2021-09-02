@@ -6,7 +6,7 @@ using System;
 
 namespace Fundoonotes.Controller.Controller
 {
-    [Authorize]
+    //[Authorize]
     public class NoteController : ControllerBase
     {
         private readonly INotesManager manager;
@@ -37,14 +37,15 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
             }
         }
+
         [HttpDelete]
-        [Route("api/deletenotes")]
+        [Route("api/deletenote")]
         public IActionResult DeleteNote(int noteId)
         {
             try
             {
                 string result = this.manager.DeleteNote(noteId);
-                if (result.Equals("Note Moved to Trash"))
+                if (result.Equals("Note Deleted"))
                 {
                     return this.Ok(new ResponseModel<string>() { status = true, Message = result });
                 }
@@ -58,6 +59,7 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
             }
         }
+
         [HttpPut]
         [Route("api/changeColour")]
         public IActionResult ChangeNoteColor(int noteId, string noteColor)
@@ -100,6 +102,7 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
             }
         }
+
         [HttpPut]
         [Route("api/Archive")]
         public IActionResult Archive(int noteId)
@@ -110,6 +113,49 @@ namespace Fundoonotes.Controller.Controller
                 if (result)
                 {
                     return this.Ok(new ResponseModel<string>() { status = true, Message = "Note Archived" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpPut]
+        [Route("api/toTrash")]
+        public IActionResult MoveToTrash(int noteId)
+        {
+            try
+            {
+                bool result = this.manager.MoveToTrash(noteId);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Note Moved to Trash" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+            }
+        }
+        [HttpPut]
+        [Route("api/restoreNote")]
+        public IActionResult RestoreNote(int noteId)
+        {
+            try
+            {
+                bool result = this.manager.RestoreNote(noteId);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Note Restored" });
                 }
                 else
                 {

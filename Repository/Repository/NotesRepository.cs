@@ -17,7 +17,7 @@
         {
             try
             {
-                if (noteData.Title != null && noteData.Description != null)
+                if (noteData.Title != null || noteData.Description != null)
                 {
                     this.userContext.Notes.Add(noteData);
                     this.userContext.SaveChanges();
