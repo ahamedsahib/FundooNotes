@@ -169,14 +169,34 @@
         {
             try
             {
-                var verifyNote = this.notesContext.Notes.Find(noteData.NoteId);
-                if (verifyNote != null)
+                var checkNote = this.userContext.Notes.Find(noteData.NoteId);
+                
+                if (checkNote != null)
                 {
-                    verifyNote.Title = noteData.Title;
-                    verifyNote.Description = noteData.Description;
-                    this.notesContext.SaveChanges();
+                    checkNote.Title = noteData.Title;
+                    checkNote.Description = noteData.Description;
+                    this.userContext.SaveChanges();
                     return true;
                 }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool SetReminder(int noteId,string addReminder)
+        {
+            try
+            {
+                var checkNote = this.userContext.Notes.Find(noteId);
+                if (checkNote != null)
+                {
+                    checkNote.Reminder = addReminder;
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+
                 return false;
             }
             catch (Exception ex)

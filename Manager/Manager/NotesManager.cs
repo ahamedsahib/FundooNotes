@@ -101,7 +101,7 @@ namespace Manager.Manager
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception(ex.Message); 
             }
         } 
         public bool UpdateNote(NotesModel noteData)
@@ -109,6 +109,17 @@ namespace Manager.Manager
             try
             {
                 return this.repository.UpdateNote(noteData);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool SetReminder(int noteId, string addReminder)
+        {
+            try
+            {
+                return this.repository.SetReminder(noteId,addReminder);
             }
             catch (Exception ex)
             {
