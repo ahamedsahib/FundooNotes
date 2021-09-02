@@ -17,5 +17,10 @@ namespace Manager.Interface
         List<NotesModel> GetNote(int userId);
         bool UpdateNote(NotesModel noteData);
         bool SetReminder(int noteId, string addReminder);
+        bool UnsetReminder(int noteId); 
+        List<NotesModel> GetReminder(int userId);
+        List<NotesModel> GetArchive(int userId); 
+        List<NotesModel> GetTrash(int userId); 
+        bool EmptyTrash(int userId);
     }
 }

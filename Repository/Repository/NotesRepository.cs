@@ -204,5 +204,94 @@
                 throw new Exception(ex.Message);
             }
         }
+        public bool UnsetReminder(int noteId)
+        {
+            try
+            {
+                var checkNote = this.userContext.Notes.Find(noteId);
+                if (checkNote != null)
+                {
+                    checkNote.Reminder = null;
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public List<NotesModel> GetReminder(int userId)
+        {
+            var notes = this.userContext.Notes.Where(x => x.UserId == userId && x.Reminder!=null && x.Trash==false).ToList();
+            try
+            {
+                if (notes != null)
+                {
+                    return notes;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public List<NotesModel> GetArchive(int userId)
+        {
+            var notes = this.userContext.Notes.Where(x => x.UserId == userId && x.Archive == true && x.Trash == false).ToList();
+            try
+            {
+                if (notes != null)
+                {
+                    return notes;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public List<NotesModel> GetTrash(int userId)
+        {
+            var notes = this.userContext.Notes.Where(x => x.UserId == userId && x.Trash == true).ToList();
+            try
+            {
+                if (notes != null)
+                {
+                    return notes;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool EmptyTrash(int userId)
+        {
+            try
+            {
+                var notes = this.userContext.Notes.Where(x => x.UserId == userId && x.Trash == true).ToList();
+                if (notes != null)
+                {
+                    this.userContext.Notes.RemoveRange(notes);
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
