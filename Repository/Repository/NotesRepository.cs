@@ -39,12 +39,12 @@
                 var checkId = this.userContext.Notes.Find(noteId);
                 if (checkId != null)
                 {
-                    this.userContext.Notes.Remove(checkId);
+                    checkId.Trash = true;
                     this.userContext.SaveChanges();
-                    return "Note Deleted Successfully";
+                    return "Note Moved to Trash";
                 }
 
-                return "Note not Present";
+                return "Note not Found";
             }
             catch (Exception ex)
             {

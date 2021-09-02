@@ -1,10 +1,12 @@
 ﻿using Manager.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
 using System;
 
 namespace Fundoonotes.Controller.Controller
 {
+    [Authorize]
     public class NoteController : ControllerBase
     {
         private readonly INotesManager manager;
@@ -42,7 +44,7 @@ namespace Fundoonotes.Controller.Controller
             try
             {
                 string result = this.manager.DeleteNote(noteId);
-                if (result.Equals("Notes Deleted Successfully"))
+                if (result.Equals("Note Moved to Trash"))
                 {
                     return this.Ok(new ResponseModel<string>() { status = true, Message = result });
                 }
@@ -99,7 +101,7 @@ namespace Fundoonotes.Controller.Controller
             }
         }
         [HttpPut]
-        [Route("api/ChangeArchive")]
+        [Route("api/Archive")]
         public IActionResult Archive(int noteId)
         {
             try
