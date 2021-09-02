@@ -13,5 +13,8 @@ namespace Repository.Interface
         bool ChangePin(int noteId);
         bool Archive(int noteId);
         bool MoveToTrash(int noteId);
+        bool RestoreNote(int noteId);
+        List<NotesModel> GetNote(int userId);
+        bool UpdateNote(int noteId);
     }
 }

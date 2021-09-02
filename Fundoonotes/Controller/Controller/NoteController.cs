@@ -146,6 +146,7 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
             }
         }
+
         [HttpPut]
         [Route("api/restoreNote")]
         public IActionResult RestoreNote(int noteId)
@@ -156,6 +157,50 @@ namespace Fundoonotes.Controller.Controller
                 if (result)
                 {
                     return this.Ok(new ResponseModel<string>() { status = true, Message = "Note Restored" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("api/getNote")]
+        public IActionResult GetNote(int userId)
+        {
+            try
+            {
+                var result = this.manager.GetNote(userId);
+                if (result.Count>0)
+                {
+                    return this.Ok(new ResponseModel<string>() { status = true, Message = "All Notes are Succesfully Fetched" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpPut]
+        [Route("api/updateNote")]
+        public IActionResult UpdateNote(NotesModel noteData)
+        {
+            try
+            {
+                bool result = this.manager.UpdateNote(noteData);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Updated Succesfully" });
                 }
                 else
                 {

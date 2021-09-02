@@ -93,11 +93,22 @@ namespace Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
-        public bool GetNote(int userId)
+        public List<NotesModel> GetNote(int userId)
         {
             try
             {
                 return this.repository.GetNote(userId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        } 
+        public bool UpdateNote(NotesModel noteData)
+        {
+            try
+            {
+                return this.repository.UpdateNote(noteData);
             }
             catch (Exception ex)
             {

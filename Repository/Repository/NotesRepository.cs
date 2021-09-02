@@ -4,6 +4,9 @@
     using Models;
     using global::Repository.Context;
     using global::Repository.Interface;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class NotesRepository : INotesRepository
     {
         private readonly UserContext userContext;
@@ -36,15 +39,53 @@
         {
             try
             {
-                var checkId = this.userContext.Notes.Find(noteId);
-                if (checkId != null)
+                var checkNote = this.userContext.Notes.Find(noteId);
+                if (checkNote != null && checkNote.Trash == true)
                 {
-                    checkId.Trash = true;
+                    this.userContext.Notes.Remove(checkNote);
                     this.userContext.SaveChanges();
-                    return "Note Moved to Trash";
+                    return "Note Deleted";
                 }
 
                 return "Note not Found";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool MoveToTrash(int noteId)
+        {
+            try
+            {
+                var checkNote = this.userContext.Notes.Find(noteId);
+                if (checkNote != null)
+                {
+                    checkNote.Trash = true;
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool RestoreNote(int noteId)
+        {
+            try
+            {
+                var checkNote = this.userContext.Notes.Find(noteId);
+                if (checkNote != null)
+                {
+                    checkNote.Trash = false;
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
             }
             catch (Exception ex)
             {
@@ -100,6 +141,42 @@
                     return true;
                 }
 
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public List<NotesModel> GetNote(int userId)
+        {
+            var notes = this.userContext.Notes.Where(x => x.UserId == userId && x.Archive == false && x.Trash == false).ToList();
+            try
+            {
+                if (notes != null)
+                {
+                    return notes;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool UpdateNote(NotesModel noteData)
+        {
+            try
+            {
+                var verifyNote = this.notesContext.Notes.Find(noteData.NoteId);
+                if (verifyNote != null)
+                {
+                    verifyNote.Title = noteData.Title;
+                    verifyNote.Description = noteData.Description;
+                    this.notesContext.SaveChanges();
+                    return true;
+                }
                 return false;
             }
             catch (Exception ex)
