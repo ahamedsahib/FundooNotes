@@ -93,5 +93,16 @@ namespace Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
-     }
+        public bool GetNote(int userId)
+        {
+            try
+            {
+                return this.repository.GetNote(userId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+    }
 }
