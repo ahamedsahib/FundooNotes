@@ -4,7 +4,6 @@
 // </copyright>
 // <creator name="Ahamed"/>
 // ----------------------------------------------------------------------------------------------------------
-
 namespace Fundoonotes.Repostiory.Repository
 {
     using System;
@@ -141,8 +140,8 @@ namespace Fundoonotes.Repostiory.Repository
                 if (verifyEmail != null)
                 {
                     string url = string.Empty;
-                    SendToMSMQ("wwww.passwordreset.com");
-                    bool result = SendEmail(email);
+                    this.SendToMSMQ("wwww.passwordreset.com");
+                    bool result = this.SendEmail(email);
                     return result;
                 }
 
@@ -157,7 +156,6 @@ namespace Fundoonotes.Repostiory.Repository
         /// <summary>
         /// Sends to MSMQ.
         /// </summary>
-        /// <param name="email">The email.</param>
         /// <param name="url">The URL.</param>
         /// <returns>return true if message exists</returns>
         public bool SendToMSMQ(string url)
@@ -174,6 +172,7 @@ namespace Fundoonotes.Repostiory.Repository
                 {
                     msqueue = MessageQueue.Create(@".\Private$\MyQueue");
                 }
+
                 Message message = new Message();
                 message.Formatter = new BinaryMessageFormatter();
                 message.Body = url;
@@ -181,17 +180,15 @@ namespace Fundoonotes.Repostiory.Repository
                 msqueue.Send(message);
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
         }
 
         /// <summary>
         /// Receives the message.
         /// </summary>
-        /// <param name="email">The email.</param>
         /// <returns>url to reset password</returns>
         public string ReceiveMessage()
         {
@@ -207,29 +204,27 @@ namespace Fundoonotes.Repostiory.Repository
             {
                 throw new Exception(ex.Message);
             }
-
         }
       
         /// <summary>
         /// Sends the mail.
         /// </summary>
         /// <param name="email">The email.</param>
-        /// <param name="url">The URL.</param>
-        /// <returns>mail to clinet</returns>
+        /// <returns>mail to client</returns>
         public bool SendEmail(string email)
         {
             try
             {
                 MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+                SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
                 mail.From = new MailAddress("adsahib39@gmail.com");
                 mail.To.Add(email);
                 mail.Subject = "Reset your password";
                 mail.Body = $"Click this link to reset your password\n{this.ReceiveMessage()}";
-                SmtpServer.Port = 587;
-                SmtpServer.Credentials = new NetworkCredential("adsahib39@gmail.com", "password");
-                SmtpServer.EnableSsl = true;
-                SmtpServer.Send(mail);
+                smtpServer.Port = 587;
+                smtpServer.Credentials = new NetworkCredential("adsahib39@gmail.com", "password");
+                smtpServer.EnableSsl = true;
+                smtpServer.Send(mail);
                 return true;
             }
             catch (Exception ex)
@@ -274,7 +269,7 @@ namespace Fundoonotes.Repostiory.Repository
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] {new Claim(ClaimTypes.Name, email)}),
+                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, email) }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
             };

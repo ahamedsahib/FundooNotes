@@ -26,16 +26,16 @@ namespace Fundoonotes.Controller.Controller
                 string result = this.manager.AddNote(noteData);
                 if (result.Equals("Notes Addedd Successfully"))
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = result });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = result });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
@@ -48,16 +48,16 @@ namespace Fundoonotes.Controller.Controller
                 string result = this.manager.DeleteNote(noteId);
                 if (result.Equals("Note Deleted"))
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = result });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = result });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
@@ -70,16 +70,16 @@ namespace Fundoonotes.Controller.Controller
                 string result = this.manager.ChangeNoteColor(noteId, noteColor);
                 if (result.Equals("Colour Updated"))
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = result });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = result });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
         [HttpPut]
@@ -91,16 +91,16 @@ namespace Fundoonotes.Controller.Controller
                 bool result = this.manager.ChangePin(noteId);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Pin Toggled" });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Pin Toggled" });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
@@ -113,21 +113,21 @@ namespace Fundoonotes.Controller.Controller
                 bool result = this.manager.Archive(noteId);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Note Archived" });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Note Archived" });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
         [HttpPut]
-        [Route("api/toTrash")]
+        [Route("api/moveToTrash")]
         public IActionResult MoveToTrash(int noteId)
         {
             try
@@ -135,16 +135,16 @@ namespace Fundoonotes.Controller.Controller
                 bool result = this.manager.MoveToTrash(noteId);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Note Moved to Trash" });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Note Moved to Trash" });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
@@ -157,16 +157,16 @@ namespace Fundoonotes.Controller.Controller
                 bool result = this.manager.RestoreNote(noteId);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Note Restored" });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Note Restored" });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
@@ -179,16 +179,16 @@ namespace Fundoonotes.Controller.Controller
                 var result = this.manager.GetNote(userId);
                 if (result.Count>0)
                 {
-                    return this.Ok(new ResponseModel<List<NotesModel>>() { status = true, Message = "All Notes are Succesfully Fetched", Data = result });
+                    return this.Ok(new ResponseModel<List<NotesModel>>() { Status = true, Message = "All Notes are Succesfully Fetched", Data = result });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
@@ -201,16 +201,16 @@ namespace Fundoonotes.Controller.Controller
                 bool result = this.manager.UpdateNote(noteData);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Updated Succesfully" });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Updated Succesfully" });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
@@ -223,16 +223,16 @@ namespace Fundoonotes.Controller.Controller
                 bool result = this.manager.SetReminder(noteId,addReminder);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Reminder Set up Successfully" });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Reminder Set up Successfully" });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
@@ -245,16 +245,16 @@ namespace Fundoonotes.Controller.Controller
                 bool result = this.manager.UnsetReminder(noteId);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Reminder removed" });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Reminder removed" });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
         [HttpGet]
@@ -266,16 +266,16 @@ namespace Fundoonotes.Controller.Controller
                 var result = this.manager.GetReminder(userId);
                 if (result.Count > 0)
                 {
-                    return this.Ok(new ResponseModel<List<NotesModel>>() { status = true, Message = "All Notes are Succesfully Fetched", Data = result });
+                    return this.Ok(new ResponseModel<List<NotesModel>>() { Status = true, Message = "All Notes are Succesfully Fetched", Data = result });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
@@ -288,16 +288,16 @@ namespace Fundoonotes.Controller.Controller
                 var result = this.manager.GetArchive(userId);
                 if (result.Count > 0)
                 {
-                    return this.Ok(new ResponseModel<List<NotesModel>>() { status = true, Message = "All Notes are Succesfully Fetched", Data = result });
+                    return this.Ok(new ResponseModel<List<NotesModel>>() { Status = true, Message = "All Notes are Succesfully Fetched", Data = result });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
@@ -310,16 +310,16 @@ namespace Fundoonotes.Controller.Controller
                 var result = this.manager.GetTrash(userId);
                 if (result.Count > 0)
                 {
-                    return this.Ok(new ResponseModel<List<NotesModel>>() { status = true, Message = "All Notes are Succesfully Fetched",Data=result});
+                    return this.Ok(new ResponseModel<List<NotesModel>>() { Status = true, Message = "All Notes are Succesfully Fetched",Data=result});
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
         [HttpDelete]
@@ -331,16 +331,16 @@ namespace Fundoonotes.Controller.Controller
                 bool result = this.manager.EmptyTrash(userId);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Trash is empty" });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Trash is empty" });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error!!Note not Found on trash" });
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Note not Found on trash" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
     }

@@ -1,11 +1,17 @@
-﻿namespace Repository.Repository
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="NotesRepository.cs" company="TVSNext">
+//   Copyright © 2021 Company="TVSNext"
+// </copyright>
+// <creator name="Ahamed"/>
+// ----------------------------------------------------------------------------------------------------------
+namespace Repository.Repository
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Models;
     using global::Repository.Context;
     using global::Repository.Interface;
-    using System.Collections.Generic;
-    using System.Linq;
 
     public class NotesRepository : INotesRepository
     {
