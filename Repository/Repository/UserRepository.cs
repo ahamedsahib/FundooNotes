@@ -1,39 +1,78 @@
-﻿using Experimental.System.Messaging;
-using Fundoonotes.Models;
-using Fundoonotes.Repostiory.Interface;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using Models;
-using Repository.Context;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net;
-using System.Net.Mail;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="UserRepository.cs" company="TVSNext">
+//   Copyright © 2021 Company="TVSNext"
+// </copyright>
+// <creator name="Ahamed"/>
+// ----------------------------------------------------------------------------------------------------------
 namespace Fundoonotes.Repostiory.Repository
 {
+    using System;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Linq;
+    using System.Net;
+    using System.Net.Mail;
+    using System.Security.Claims;
+    using Experimental.System.Messaging;
+    using Fundoonotes.Models;
+    using Fundoonotes.Repostiory.Interface;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.IdentityModel.Tokens;
+    using global::Models;
+    using global::Repository.Context;
+    using System.Text;
+
+    /// <summary>
+    /// user repository class
+    /// </summary>
+    /// <seealso cref="Fundoonotes.Repostiory.Interface.IUserRepository" />
     public class UserRepository : IUserRepository
     {
+        /// <summary>
+        /// The user context
+        /// </summary>
         private readonly UserContext userContext;
 
-        //private readonly IConfiguration configuration;
+        /// <summary>
+        /// The configuration
+        /// </summary>
         private readonly IConfiguration configuration;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserRepository"/> class.
+        /// </summary>
+        /// <param name="userContext">The user context.</param>
+        /// <param name="configuration">The configuration.</param>
         public UserRepository(UserContext userContext, IConfiguration configuration)
         {
             this.userContext = userContext;
             this.configuration = configuration;
         }
+
+        /// <summary>
+        /// Encrypts the password.
+        /// </summary>
+        /// <param name="password">The password.</param>
+        /// <returns>encrypted data</returns>
+        public static string EncryptPassword(string password)
+        {
+            try
+            {
+                byte[] encData_byte = new byte[password.Length];
+                encData_byte = System.Text.Encoding.UTF8.GetBytes(password);
+                string encodedData = Convert.ToBase64String(encData_byte);
+                return encodedData;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error Password Encryption" + ex.Message);
+            }
+        }
+
         /// <summary>
         /// Registers the specified user data.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>registration is successful or not</returns>
         public string Register(RegisterModel userData)
         {
             try
@@ -43,28 +82,28 @@ namespace Fundoonotes.Repostiory.Repository
                 {
                     if (userData != null)
                     {
-
                         userData.Password = EncryptPassword(userData.Password);
                         this.userContext.Users.Add(userData);
                         this.userContext.SaveChanges();
                         return "Registration Successfull";
                     }
+
                     return "Registraion Unsuccessfull";
                 }
+
                 return "Email ID already exists";
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
         }
+       
         /// <summary>
         /// Logins the specified user data.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>user email and password correct or wrong</returns> 
         public string Login(UserCredentialModel userData)
         {
             try
@@ -80,6 +119,7 @@ namespace Fundoonotes.Repostiory.Repository
                 {
                     message = "Login failed!!!!!\nEmail or Password wrong";
                 }
+
                 return message;
             }
             catch (Exception ex)
@@ -87,32 +127,12 @@ namespace Fundoonotes.Repostiory.Repository
                 throw new Exception(ex.Message);
             }
         }
+        
         /// <summary>
-        /// Encrypts the password.
-        /// </summary>
-        /// <param name="password">The password.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception">Error Password Encryption" + ex.Message</exception>
-        public static string EncryptPassword(string password)
-        {
-            try
-            {
-                byte[] encData_byte = new byte[password.Length];
-                encData_byte = System.Text.Encoding.UTF8.GetBytes(password);
-                string encodedData = Convert.ToBase64String(encData_byte);
-                return encodedData;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error Password Encryption" + ex.Message);
-            }
-        }
-        /// <summary>
-        /// Forgots the password.
+        /// Forgot the password.
         /// </summary>
         /// <param name="email">The email.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>email id exists or not</returns>
         public bool ForgotPassword(string email)
         {
             try
@@ -121,28 +141,25 @@ namespace Fundoonotes.Repostiory.Repository
                 if (verifyEmail != null)
                 {
                     string url = string.Empty;
-                    SendToMSMQ(email, "wwww.passwordreset.com");
-                    bool result = ReceiveMessage(email);
+                    this.SendToMSMQ("wwww.passwordreset.com");
+                    bool result = this.SendEmail(email);
                     return result;
                 }
+
                 return false;
-                
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
-
         }
+       
         /// <summary>
         /// Sends to MSMQ.
         /// </summary>
-        /// <param name="email">The email.</param>
         /// <param name="url">The URL.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
-        public bool SendToMSMQ(string email,string url)
+        /// <returns>return true if message exists</returns>
+        public bool SendToMSMQ(string url)
         {
             MessageQueue msqueue;
 
@@ -156,25 +173,25 @@ namespace Fundoonotes.Repostiory.Repository
                 {
                     msqueue = MessageQueue.Create(@".\Private$\MyQueue");
                 }
+
                 Message message = new Message();
                 message.Formatter = new BinaryMessageFormatter();
                 message.Body = url;
                 msqueue.Label = "url Link";
                 msqueue.Send(message);
                 return true;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
         }
+
         /// <summary>
         /// Receives the message.
         /// </summary>
-        /// <param name="email">The email.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
-        public bool ReceiveMessage(string email)
+        /// <returns>url to reset password</returns>
+        public string ReceiveMessage()
         {
             try
             {
@@ -182,35 +199,33 @@ namespace Fundoonotes.Repostiory.Repository
                 var receiveMsg = receiveQueue.Receive();
                 receiveMsg.Formatter = new BinaryMessageFormatter();
                 string linkToSend = receiveMsg.Body.ToString();
-                return SendMail(email, linkToSend);
+                return linkToSend;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-
         }
+      
         /// <summary>
         /// Sends the mail.
         /// </summary>
         /// <param name="email">The email.</param>
-        /// <param name="url">The URL.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
-        public bool SendMail(string email, string url)
+        /// <returns>mail to client</returns>
+        public bool SendEmail(string email)
         {
             try
             {
                 MailMessage mail = new MailMessage();
-                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+                SmtpClient smtpServer = new SmtpClient("smtp.gmail.com");
                 mail.From = new MailAddress("adsahib39@gmail.com");
                 mail.To.Add(email);
                 mail.Subject = "Reset your password";
-                mail.Body = $"Click this link to reset your password\n{url}";
-                SmtpServer.Port = 587;
-                SmtpServer.Credentials = new NetworkCredential("adsahib39@gmail.com", "password");
-                SmtpServer.EnableSsl = true;
-                SmtpServer.Send(mail);
+                mail.Body = $"Click this link to reset your password\n{this.ReceiveMessage()}";
+                smtpServer.Port = 587;
+                smtpServer.Credentials = new NetworkCredential("adsahib39@gmail.com", "password");
+                smtpServer.EnableSsl = true;
+                smtpServer.Send(mail);
                 return true;
             }
             catch (Exception ex)
@@ -218,12 +233,12 @@ namespace Fundoonotes.Repostiory.Repository
                 throw new Exception(ex.Message);
             }
         }
+       
         /// <summary>
         /// Resets the password.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
-        /// <exception cref="System.Exception"></exception>
+        /// <returns>password updated or not</returns>
         public bool ResetPassword(UserCredentialModel userData)
         {
             try
@@ -235,23 +250,27 @@ namespace Fundoonotes.Repostiory.Repository
                     this.userContext.SaveChanges();
                     return true;
                 }
-                return false;
-                
+
+                return false;           
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
+       
+        /// <summary>
+        /// Generates the token.
+        /// </summary>
+        /// <param name="email">The email.</param>
+        /// <returns>generated token</returns>
         public string GenerateToken(string email)
         {
-            byte[] key = Convert.FromBase64String(this.configuration["SecretKey"]);
+            var key = Encoding.UTF8.GetBytes(this.configuration["SecretKey"]);
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Name, email)
-            }),
+                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, email) }),
                 Expires = DateTime.UtcNow.AddMinutes(30),
                 SigningCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature)
             };

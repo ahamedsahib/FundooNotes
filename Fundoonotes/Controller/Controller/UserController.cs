@@ -1,125 +1,162 @@
-﻿using Fundoonotes.Manager.Interface;
-using Fundoonotes.Models;
-using Microsoft.AspNetCore.Mvc;
-using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="UserController.cs" company="TVSNext">
+//   Copyright © 2021 Company="TVSNext"
+// </copyright>
+// <creator name="Ahamed"/>
+// ----------------------------------------------------------------------------------------------------------
 namespace Fundoonotes.Controller.Controller
 {
-    public class UserController: ControllerBase
+    using System;
+    using Fundoonotes.Manager.Interface;
+    using Fundoonotes.Models;
+    using Microsoft.AspNetCore.Mvc;
+    using global::Models;
+    using Microsoft.Extensions.Logging;
+
+    /// <summary>
+    /// UserController class
+    /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
+    public class UserController : ControllerBase
     {
         /// <summary>
         /// The manager
         /// </summary>
         private readonly IUserManager manager;
 
-        public UserController(IUserManager manager)
+        private readonly ILogger<UserController> _logger;
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserController"/> class.
+        /// </summary>
+        /// <param name="manager">The manager.</param>
+        public UserController(IUserManager manager, ILogger<UserController> logger)
         {
             this.manager = manager;
+            _logger = logger;
         }
 
         /// <summary>
         /// Registers the specified user data.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
+        /// <returns>successfully user register or not</returns>
         [HttpPost]
         [Route("api/register")]
         public IActionResult Register([FromBody]RegisterModel userData)
         {
             try
             {
-                string result=this.manager.Register(userData);
+                _logger.LogInformation("Register method called!!!");
+                string result = this.manager.Register(userData);
                 if (result.Equals("Registration Successfull"))
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = result});
+                    _logger.LogInformation($"{userData.FirstName} Registerd Succesfully");
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }
-                else
-                {
-                    return this.BadRequest(new ResponseModel<string>() { status =false, Message = result });
-                }
+                
+                _logger.LogInformation("Registration Failed");
+                return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                _logger.LogWarning("Some Error Occured while Registration");
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        
         /// <summary>
         /// Logins the specified user data.
         /// </summary>
         /// <param name="userData">The user data.</param>
-        /// <returns></returns>
+        /// <returns>user logged in or not</returns>
         [HttpPost]
         [Route("api/login")]
         public IActionResult Login([FromBody] UserCredentialModel userData)
         {
             try
             {
+                _logger.LogInformation("Login method called!!!");
                 string result = this.manager.Login(userData);
                 if (result.Equals("Login Success"))
                 {
+                    _logger.LogInformation($"{userData.Email} Login Succesfully");
                     string tokenString = this.manager.GenerateToken(userData.Email);
-                    return this.Ok(new { status = true, Message = result, tokenString, userData.Email });
+                    return this.Ok(new { Status = true, Message = result, tokenString, userData.Email });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = result });
+                    _logger.LogInformation("Login Failed");
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                _logger.LogWarning("Some Error Occured while Login");
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+        
         /// <summary>
-        /// Forgots the password.
+        /// Forgot the password.
         /// </summary>
         /// <param name="email">The email.</param>
-        /// <returns></returns>
+        /// <returns>email id is exists or not</returns>
         [HttpGet]
         [Route("api/forgotpassword")]
         public IActionResult ForgotPassword(string email)
         {
             try
             {
+                _logger.LogInformation("Forgot Password method called!!!");
                 var result = this.manager.ForgotPassword(email);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Check Your Mail" });
+                    _logger.LogInformation($"{email} Got mail to Reset Password");
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Check Your Mail" });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Error !!Email Id Not found Or Incorrect" });
+                    _logger.LogInformation("Error ! Email Id Not found to Reset Password");
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error !!Email Id Not found Or Incorrect" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                _logger.LogWarning("Some Error Occured while Changing Password");
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
 
+        /// <summary>
+        /// Resets the password.
+        /// </summary>
+        /// <param name="userData">The user data.</param>
+        /// <returns>password update or not</returns>
         [HttpPut]
         [Route("api/resetpassword")]
         public IActionResult ResetPassword([FromBody] UserCredentialModel userData)
         {
             try
             {
+                _logger.LogInformation("Reset Password method called!!!");
                 bool result = this.manager.ResetPassword(userData);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { status = true, Message = "Password Succesfully Updated" });
+                    _logger.LogInformation($"{userData.Email} Reset Password Succesfully");
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Password Succesfully Updated" });
                 }
                 else
                 {
-                    return this.BadRequest(new ResponseModel<string>() { status = false, Message = "Some Error Ocuured!!Try again" });
+                    _logger.LogInformation("Error ! Email Id Not found to Reset Password");
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Some Error Ocuured!!Try again" });
                 }
             }
             catch (Exception ex)
             {
-                return this.NotFound(new ResponseModel<string>() { status = false, Message = ex.Message });
+                _logger.LogWarning("Some Error Occured while Resting Password");
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
     }
