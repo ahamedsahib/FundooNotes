@@ -77,19 +77,23 @@ namespace Fundoonotes.Controller.Controller
         {
             try
             {
+                _logger.LogInformation("Login method called!!!");
                 string result = this.manager.Login(userData);
                 if (result.Equals("Login Success"))
                 {
+                    _logger.LogInformation($"{userData.Email} Login Succesfully");
                     string tokenString = this.manager.GenerateToken(userData.Email);
                     return this.Ok(new { Status = true, Message = result, tokenString, userData.Email });
                 }
                 else
                 {
+                    _logger.LogInformation("Login Failed");
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
                 }
             }
             catch (Exception ex)
             {
+                _logger.LogWarning("Some Error Occured while Login");
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
@@ -105,18 +109,22 @@ namespace Fundoonotes.Controller.Controller
         {
             try
             {
+                _logger.LogInformation("Forgot Password method called!!!");
                 var result = this.manager.ForgotPassword(email);
                 if (result)
                 {
+                    _logger.LogInformation($"{email} Got mail to Reset Password");
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "Check Your Mail" });
                 }
                 else
                 {
+                    _logger.LogInformation("Error ! Email Id Not found to Reset Password");
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error !!Email Id Not found Or Incorrect" });
                 }
             }
             catch (Exception ex)
             {
+                _logger.LogWarning("Some Error Occured while Changing Password");
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
@@ -132,18 +140,22 @@ namespace Fundoonotes.Controller.Controller
         {
             try
             {
+                _logger.LogInformation("Reset Password method called!!!");
                 bool result = this.manager.ResetPassword(userData);
                 if (result)
                 {
+                    _logger.LogInformation($"{userData.Email} Reset Password Succesfully");
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "Password Succesfully Updated" });
                 }
                 else
                 {
+                    _logger.LogInformation("Error ! Email Id Not found to Reset Password");
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Some Error Ocuured!!Try again" });
                 }
             }
             catch (Exception ex)
             {
+                _logger.LogWarning("Some Error Occured while Resting Password");
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
