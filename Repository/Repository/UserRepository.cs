@@ -19,6 +19,7 @@ namespace Fundoonotes.Repostiory.Repository
     using Microsoft.IdentityModel.Tokens;
     using global::Models;
     using global::Repository.Context;
+    using System.Text;
 
     /// <summary>
     /// user repository class
@@ -265,7 +266,7 @@ namespace Fundoonotes.Repostiory.Repository
         /// <returns>generated token</returns>
         public string GenerateToken(string email)
         {
-            byte[] key = Convert.FromBase64String(this.configuration["SecretKey"]);
+            var key = Encoding.UTF8.GetBytes(this.configuration["SecretKey"]);
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
             {

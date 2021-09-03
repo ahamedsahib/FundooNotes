@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Fundoonotes.Controller.Controller
 {
-    //[Authorize]
+    [Authorize]
     public class NoteController : ControllerBase
     {
         private readonly INotesManager manager;

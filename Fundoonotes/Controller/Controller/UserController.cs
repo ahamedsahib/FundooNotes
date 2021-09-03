@@ -11,6 +11,7 @@ namespace Fundoonotes.Controller.Controller
     using Fundoonotes.Models;
     using Microsoft.AspNetCore.Mvc;
     using global::Models;
+    using Microsoft.Extensions.Logging;
 
     /// <summary>
     /// UserController class
@@ -23,13 +24,17 @@ namespace Fundoonotes.Controller.Controller
         /// </summary>
         private readonly IUserManager manager;
 
+        private readonly ILogger<UserController> _logger;
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
         /// <param name="manager">The manager.</param>
-        public UserController(IUserManager manager)
+        public UserController(IUserManager manager, ILogger<UserController> logger)
         {
             this.manager = manager;
+            _logger = logger;
         }
 
         /// <summary>
@@ -43,18 +48,20 @@ namespace Fundoonotes.Controller.Controller
         {
             try
             {
+                _logger.LogInformation("Register method called!!!");
                 string result = this.manager.Register(userData);
                 if (result.Equals("Registration Successfull"))
                 {
+                    _logger.LogInformation($"{userData.FirstName} Registerd Succesfully");
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }
-                else
-                {
-                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
-                }
+                
+                _logger.LogInformation("Registration Failed");
+                return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
             }
             catch (Exception ex)
             {
+                _logger.LogWarning("Some Error Occured while Registration");
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }

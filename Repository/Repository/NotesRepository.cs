@@ -68,6 +68,8 @@ namespace Repository.Repository
                 if (checkNote != null)
                 {
                     checkNote.Trash = true;
+                    checkNote.Reminder = null;
+                    checkNote.Pin = false;
                     this.userContext.SaveChanges();
                     return true;
                 }
@@ -125,9 +127,11 @@ namespace Repository.Repository
                 if (checkNote != null)
                 {
                     checkNote.Pin = checkNote.Pin ? false : true;
+                    checkNote.Archive = false;
                     this.userContext.SaveChanges();
                     return true;
                 }
+
                 return false;
             }
             catch (Exception ex)
@@ -143,6 +147,7 @@ namespace Repository.Repository
                 if (checkNote != null)
                 {
                     checkNote.Archive = checkNote.Archive ? false : true;
+                    checkNote.Pin = false;
                     this.userContext.SaveChanges();
                     return true;
                 }
