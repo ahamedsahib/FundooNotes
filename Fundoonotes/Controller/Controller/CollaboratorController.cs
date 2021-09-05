@@ -1,5 +1,6 @@
 ﻿using Manager.Manager;
 using Microsoft.AspNetCore.Mvc;
+using Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,28 @@ namespace Fundoonotes.Controller.Controller
         public CollaboratorController(CollaboratorManager manager)
         {
             this.manager = manager;
+        }
+
+        [HttpPost]
+        [Route("api/addCollaborator")]
+        public IActionResult AddNote([FromBody] CollaboratorModel collaboratorData)
+        {
+            try
+            {
+                string result = this.manager.AddCollaborator(collaboratorData);
+                if (result.Equals("collaborator Addedd Successfully"))
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
         }
     }
 }
