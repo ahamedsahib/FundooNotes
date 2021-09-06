@@ -42,9 +42,11 @@ namespace Fundoonotes
             services.AddDbContextPool<UserContext>(
                 options => options.UseSqlServer(this.configuration.GetConnectionString("UserDbConnection")));
             services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IUserManager, UserManager>();
+            services.AddTransient<IUserManager, UserManager>(); 
             services.AddTransient<INotesRepository, NotesRepository>();
             services.AddTransient<INotesManager, NotesManager>();
+            services.AddTransient<ICollaboratorRepository, CollaboratorRepository>();
+            services.AddTransient<ICollaboratorManager, CollaboratorManager>();
 
             services.AddSwaggerGen(c =>
             {
@@ -130,7 +132,3 @@ namespace Fundoonotes
         }
     }
 }
-//endpoints.MapGet("/", async context =>
-//{
-//    await context.Response.WriteAsync("Hello World!");
-//});

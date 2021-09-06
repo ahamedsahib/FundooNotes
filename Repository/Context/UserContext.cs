@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+﻿// ----------------------------------------------------------------------------------------------------------
 // <copyright file="UserContext.cs" company="TVSNext">
 //   Copyright © 2021 Company="TVSNext"
 // </copyright>
@@ -39,5 +39,13 @@ namespace Repository.Context
         /// The notes.
         /// </value>
         public DbSet<NotesModel> Notes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the collaborator.
+        /// </summary>
+        /// <value>
+        /// The collaborator.
+        /// </value>
+       public DbSet<CollaboratorModel> Collaborator { get; set; }
     }
 }
