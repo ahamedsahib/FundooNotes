@@ -44,3 +44,21 @@
 2021-09-05 13:58:35.2742 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.7.11.13229. Product version: 4.7.11+33ed3a9f86277651e93ddf39cda64a046a06778b. GlobalAssemblyCache: False
 2021-09-05 13:58:37.3420 Info AppDomain Shutting down. Logger closing...
 2021-09-05 13:58:37.3614 Info Logger has been shut down.
+2021-09-06 11:05:32.7204 Info Message Template Auto Format enabled
+2021-09-06 11:05:32.7351 Info Loading assembly: NLog.Web.AspNetCore
+2021-09-06 11:05:32.8082 Info Adding target FileTarget(Name=alldata)
+2021-09-06 11:05:32.8082 Info Adding target FileTarget(Name=otherFile-web)
+2021-09-06 11:05:32.8563 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\Users\ahamedsahib.m\source\repos\FundooNotes\Fundoonotes\bin\Debug\netcoreapp3.1\NLog.config
+2021-09-06 11:05:32.8943 Info Configuration initialized.
+2021-09-06 11:05:32.8996 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.7.11.13229. Product version: 4.7.11+33ed3a9f86277651e93ddf39cda64a046a06778b. GlobalAssemblyCache: False
+2021-09-06 11:05:34.2872 Info AppDomain Shutting down. Logger closing...
+2021-09-06 11:05:34.2872 Info Logger has been shut down.
+2021-09-06 11:06:00.3487 Info Message Template Auto Format enabled
+2021-09-06 11:06:00.3666 Info Loading assembly: NLog.Web.AspNetCore
+2021-09-06 11:06:00.4673 Info Adding target FileTarget(Name=alldata)
+2021-09-06 11:06:00.4673 Info Adding target FileTarget(Name=otherFile-web)
+2021-09-06 11:06:00.5106 Info Validating config: TargetNames=alldata, otherFile-web, ConfigItems=45, FilePath=C:\Users\ahamedsahib.m\source\repos\FundooNotes\Fundoonotes\bin\Debug\netcoreapp3.1\NLog.config
+2021-09-06 11:06:00.5382 Info Configuration initialized.
+2021-09-06 11:06:00.5382 Info NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c. File version: 4.7.11.13229. Product version: 4.7.11+33ed3a9f86277651e93ddf39cda64a046a06778b. GlobalAssemblyCache: False
+2021-09-06 11:06:02.0657 Info AppDomain Shutting down. Logger closing...
+2021-09-06 11:06:02.0817 Info Logger has been shut down.

@@ -9,7 +9,7 @@ using Repository.Context;
 namespace Repository.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210905082819_FundooNotesCollaborator")]
+    [Migration("20210906053534_FundooNotesCollaborator")]
     partial class FundooNotesCollaborator
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -60,6 +60,9 @@ namespace Repository.Migrations
 
                     b.Property<int>("NoteId")
                         .HasColumnType("int");
+
+                    b.Property<string>("SenderEmailId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CollaboratorId");
 

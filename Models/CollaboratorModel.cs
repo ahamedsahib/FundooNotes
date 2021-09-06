@@ -10,10 +10,10 @@ namespace Models
     {
         [Key]
         public int CollaboratorId { get; set; }
-
         [ForeignKey("NotesModel")]
         public int NoteId { get; set; }
         public virtual NotesModel NotesModel { get; set; }
+        public string SenderEmailId { get; set; }
         public string CollaboratorEmailId { get; set; }
     }
 }

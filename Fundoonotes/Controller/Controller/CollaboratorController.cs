@@ -24,7 +24,7 @@ namespace Fundoonotes.Controller.Controller
             try
             {
                 string result = this.manager.AddCollaborator(collaboratorData);
-                if (result.Equals("collaborator Addedd Successfully"))
+                if (result.Equals("collaborator Added Successfully"))
                 {
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }

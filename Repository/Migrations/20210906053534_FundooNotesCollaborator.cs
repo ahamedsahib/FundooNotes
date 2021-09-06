@@ -13,6 +13,7 @@ namespace Repository.Migrations
                     CollaboratorId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NoteId = table.Column<int>(nullable: false),
+                    SenderEmailId = table.Column<string>(nullable: true),
                     CollaboratorEmailId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>

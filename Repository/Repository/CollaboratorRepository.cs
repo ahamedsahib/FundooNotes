@@ -23,6 +23,9 @@ namespace Repository.Repository
             {
                 var checkEmail = this.userContext.Users.Where(x => x.Email.Equals(collaboratorData.CollaboratorEmailId)).FirstOrDefault();
                 var checkNote = this.userContext.Notes.Where(x => x.NoteId == collaboratorData.NoteId).FirstOrDefault();
+                //var result = from s in this.userContext.Users
+                //             join sa in this.userContext.Notes on s.UserId equals sa.UserId
+                //             where s.
                 if (collaboratorData != null)
                 {
                     if (checkNote != null)
@@ -36,7 +39,7 @@ namespace Repository.Repository
                         }
                         return "Email id not registered";
                     }
-                    return "Note not present";
+                    return "Note not Found";
                 }
                 return "Collaborator Addedd Failed";
             }

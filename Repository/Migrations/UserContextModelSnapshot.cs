@@ -59,6 +59,9 @@ namespace Repository.Migrations
                     b.Property<int>("NoteId")
                         .HasColumnType("int");
 
+                    b.Property<string>("SenderEmailId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("CollaboratorId");
 
                     b.HasIndex("NoteId");
