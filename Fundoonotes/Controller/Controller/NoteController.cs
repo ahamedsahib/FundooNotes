@@ -1,5 +1,6 @@
 ﻿using Manager.Interface;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Models;
@@ -8,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Fundoonotes.Controller.Controller
 {
-    [Authorize]
+    //[Authorize]
     public class NoteController : ControllerBase
     {
         private readonly INotesManager manager;
@@ -405,6 +406,46 @@ namespace Fundoonotes.Controller.Controller
             catch (Exception ex)
             {
                 _logger.LogWarning($"Error Ocuured While UserId:{userId} Deleting all Trash ");
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpPut]
+        [Route("api/addImage")]
+        public IActionResult AddImage(int noteId, IFormFile imagePath)
+        {
+            try
+            {
+                bool result = this.manager.AddImage(noteId,imagePath);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Image Uploaded" });
+                }
+
+                return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Image Uploaded Failed" });
+            }
+            catch (Exception ex)
+            {
+               return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpPut]
+        [Route("api/deleteImage")]
+        public IActionResult DeleteImage(int noteId)
+        { 
+            try
+            {
+                bool result = this.manager.DeleteImage(noteId);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Image deleted Successfully" });
+                }
+
+                return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!delete failed" });
+            }
+            catch (Exception ex)
+            {
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }

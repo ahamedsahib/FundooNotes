@@ -9,6 +9,7 @@ namespace Manager.Manager
     using System;
     using System.Collections.Generic;
     using global::Manager.Interface;
+    using Microsoft.AspNetCore.Http;
     using Models;
     using Repository.Interface;
 
@@ -312,6 +313,29 @@ namespace Manager.Manager
             try
             {
                 return this.repository.EmptyTrash(userId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool AddImage(int noteId, IFormFile imagePath)
+        {
+            try
+            {
+                return this.repository.AddImage(noteId, imagePath);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool DeleteImage(int noteId)
+        {
+            try
+            {
+                return this.repository.DeleteImage(noteId);
             }
             catch (Exception ex)
             {

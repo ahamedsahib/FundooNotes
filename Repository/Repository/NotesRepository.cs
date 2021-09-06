@@ -12,14 +12,20 @@ namespace Repository.Repository
     using Models;
     using global::Repository.Context;
     using global::Repository.Interface;
+    using Microsoft.AspNetCore.Http;
+    using CloudinaryDotNet;
+    using CloudinaryDotNet.Actions;
+    using Microsoft.Extensions.Configuration;
 
     public class NotesRepository : INotesRepository
     {
         private readonly UserContext userContext;
 
-        public NotesRepository(UserContext userContext)
+        private readonly IConfiguration configuration;
+        public NotesRepository(UserContext userContext, IConfiguration configuration)
         {
             this.userContext = userContext;
+            this.configuration = configuration;
         }
 
         public string AddNote(NotesModel noteData)
@@ -293,6 +299,53 @@ namespace Repository.Repository
                 if (notes != null)
                 {
                     this.userContext.Notes.RemoveRange(notes);
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool AddImage(int noteId, IFormFile imagePath)
+        {
+            try
+            {
+                var note = this.userContext.Notes.Where(x => x.NoteId == noteId && x.Trash == false).SingleOrDefault();
+                if(note !=null)
+                {
+                    Account account = new Account(this.configuration.GetSection("CloudinaryAccount").GetSection("CloudName").Value, this.configuration.GetValue<string>("CloudinaryAccount:ApiKey"), this.configuration.GetValue<string>("CloudinaryAccount:ApiSecret"));
+                    Cloudinary cloudinary = new Cloudinary(account);
+
+                    var uploadParams = new ImageUploadParams()
+                    {
+                        File=new FileDescription(imagePath.FileName,imagePath.OpenReadStream())
+                    };
+                    var uploadResult = cloudinary.Upload(uploadParams);
+                    Uri x = uploadResult.Url;
+                    note.Image = x.ToString();
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool DeleteImage(int noteId)
+        {
+            try
+            {
+                var checkNote = this.userContext.Notes.Find(noteId);
+                if (checkNote != null)
+                {
+                    checkNote.Image = null;
                     this.userContext.SaveChanges();
                     return true;
                 }
