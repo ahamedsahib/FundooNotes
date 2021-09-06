@@ -22,12 +22,32 @@ namespace Repository.Repository
             try
             {
                 var checkLabel = this.userContext.Labels.Where(x => x.NoteId == labelData.NoteId && x.LabelName.Equals(labelData.LabelName)).SingleOrDefault();
-                if (labelData != null)
+                if (checkLabel == null)
                 {
                     this.userContext.Labels.Add(labelData);
                     this.userContext.SaveChanges();
                     return "Label Added Successfully";
                 }
+
+                return "label added failed";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public string AddLabelToUser(LabelModel labelData)
+        {
+            try
+            {
+                var checkLabel = this.userContext.Labels.Where(x => x.UserId == labelData.UserId && x.LabelName.Equals(labelData.LabelName)).FirstOrDefault();
+                if (labelData == null)
+                {
+                    this.userContext.Labels.Add(labelData);
+                    this.userContext.SaveChanges();
+                    return "Label Added Successfully";
+                }
+
                 return "label added failed";
             }
             catch (Exception ex)
