@@ -41,7 +41,14 @@ namespace Manager.Manager
 
         public List<CollaboratorModel> GetCollaborator(int noteId)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return this.repository.GetCollaborator(noteId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

@@ -64,5 +64,24 @@ namespace Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+
+        public List<CollaboratorModel> GetCollaborator(int noteId)
+        {
+            try
+            {
+                var getCollaborator = this.userContext.Collaborator.Where(x => x.NoteId == noteId).ToList();
+
+                if (getCollaborator != null)
+                {
+                    return getCollaborator;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
