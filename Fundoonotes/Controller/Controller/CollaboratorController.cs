@@ -50,10 +50,30 @@ namespace Fundoonotes.Controller.Controller
                 {
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }
-                else
+                
+                return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("api/getCollaborator")]
+        public IActionResult GetCollaborator(int noteId)
+        {
+            try
+            {
+                var result = this.manager.GetCollaborator(noteId);
+                if (result.Count > 0)
                 {
-                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                    return this.Ok(new ResponseModel<List<CollaboratorModel>>() { Status = true, Message = "All Notes are Succesfully Fetched", Data = result });
                 }
+             
+                return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!No Note Found on Archive" });
+                
             }
             catch (Exception ex)
             {

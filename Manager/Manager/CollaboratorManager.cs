@@ -38,5 +38,10 @@ namespace Manager.Manager
                 throw new Exception(ex.Message);
              }
         }
+
+        public List<CollaboratorModel> GetCollaborator(int noteId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

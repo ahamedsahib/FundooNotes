@@ -9,5 +9,6 @@ namespace Repository.Interface
     {
         string AddCollaborator(CollaboratorModel collaboratorData);
         string DeleteCollaborator(int noteId, int collaboratorId);
+        List<CollaboratorModel> GetCollaborator(int noteId);
     }
 }
