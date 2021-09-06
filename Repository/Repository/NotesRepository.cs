@@ -338,5 +338,24 @@ namespace Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public bool DeleteImage(int noteId)
+        {
+            try
+            {
+                var checkNote = this.userContext.Notes.Find(noteId);
+                if (checkNote != null)
+                {
+                    checkNote.Image = null;
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

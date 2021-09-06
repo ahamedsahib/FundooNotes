@@ -422,11 +422,31 @@ namespace Fundoonotes.Controller.Controller
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "Image Uploaded" });
                 }
 
-                return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!" });
+                return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!Image Uploaded Failed" });
             }
             catch (Exception ex)
             {
                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpPut]
+        [Route("api/deleteImage")]
+        public IActionResult DeleteImage(int noteId)
+        { 
+            try
+            {
+                bool result = this.manager.DeleteImage(noteId);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Image deleted Successfully" });
+                }
+
+                return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error!!delete failed" });
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
     }

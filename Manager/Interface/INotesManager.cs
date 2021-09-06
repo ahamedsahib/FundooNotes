@@ -123,5 +123,6 @@ namespace Manager.Interface
         bool EmptyTrash(int userId);
 
         bool AddImage(int noteId, IFormFile imagePath);
+        bool DeleteImage(int noteId);
     }
 }
