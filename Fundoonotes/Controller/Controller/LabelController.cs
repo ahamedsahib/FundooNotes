@@ -60,13 +60,36 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
-        [HttpPost]
+
+        [HttpDelete]
         [Route("api/deleteLabelOnNote")]
         public IActionResult DeleteLabelOnNote(int LabelId)
         {
             try
             {
                 bool result = this.manager.DeleteLabelOnNote(LabelId);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Label Deleted Successfully" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Label Deletion Failed " });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpDelete]
+        [Route("api/deleteLabel")]
+        public IActionResult DeleteLabel(int userId,string labelName)
+        {
+            try
+            {
+                bool result = this.manager.DeleteLabel( userId, labelName);
                 if (result)
                 {
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "Label Deleted Successfully" });

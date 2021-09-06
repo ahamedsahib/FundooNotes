@@ -41,7 +41,7 @@ namespace Repository.Repository
             try
             {
                 var checkLabel = this.userContext.Labels.Where(x => x.UserId == labelData.UserId && x.LabelName.Equals(labelData.LabelName)).FirstOrDefault();
-                if (labelData == null)
+                if (checkLabel == null)
                 {
                     this.userContext.Labels.Add(labelData);
                     this.userContext.SaveChanges();
@@ -55,19 +55,40 @@ namespace Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
-        public string DeleteLabelOnNote(LabelModel labelData)
+
+        public bool DeleteLabel(int userId, string labelName)
         {
             try
             {
-                var checkLabel = this.userContext.Labels.Where(x => x.UserId == labelData.UserId && x.LabelName.Equals(labelData.LabelName)).FirstOrDefault();
-                if (labelData == null)
+                var checkLabel = this.userContext.Labels.Where(x => x.UserId == userId && x.LabelName.Equals(labelName)).ToList();
+                if (checkLabel != null)
                 {
-                    this.userContext.Labels.Add(labelData);
+                    this.userContext.Labels.RemoveRange(checkLabel);
                     this.userContext.SaveChanges();
-                    return "Label Added Successfully";
+                    return true;
                 }
 
-                return "label added failed";
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool DeleteLabelOnNote(int labelId)
+        {
+            try
+            {
+                var checkLabel = this.userContext.Labels.Find(labelId);
+                if (checkLabel != null)
+                {
+                    this.userContext.Labels.Remove(checkLabel);
+                    this.userContext.SaveChanges();
+                    return true;
+                }
+
+                return false;
             }
             catch (Exception ex)
             {

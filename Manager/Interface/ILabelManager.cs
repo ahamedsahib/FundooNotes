@@ -9,6 +9,7 @@ namespace Manager.Interface
     {
         string AddLabelToNote(LabelModel labelData);
         string AddLabelToUser(LabelModel labelData);
-        bool DeleteLabelOnNote(int noteId, int LabelId);
+        bool DeleteLabelOnNote(int LabelId);
+        bool DeleteLabel(int userId, string labelName);
     }
 }

@@ -8,5 +8,8 @@ namespace Repository.Interface
     public interface ILabelRepository
     {
         string AddLabelToNote(LabelModel labelData);
+        string AddLabelToUser(LabelModel labelData);
+        bool DeleteLabelOnNote(int LabelId);
+        bool DeleteLabel(int userId, string labelName);
     }
 }
