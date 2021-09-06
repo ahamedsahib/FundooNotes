@@ -7,6 +7,7 @@
 namespace Manager.Interface
 {
     using System.Collections.Generic;
+    using Microsoft.AspNetCore.Http;
     using Models;
 
     /// <summary>
@@ -120,5 +121,7 @@ namespace Manager.Interface
         /// <param name="userId">The user identifier.</param>
         /// <returns>Trash empty or not</returns>
         bool EmptyTrash(int userId);
+
+        bool AddImage(int noteId, IFormFile imagePath);
     }
 }
