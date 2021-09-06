@@ -38,5 +38,28 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+
+        [HttpDelete]
+        [Route("api/deleteCollaborator")]
+        public IActionResult DeleteCollaborator(int noteId,int collaboratorId)
+        {
+            try
+            {
+                string result = this.manager.DeleteCollaborator(noteId, collaboratorId);
+                if (result.Equals("collaborator Added Successfully"))
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+
     }
 }

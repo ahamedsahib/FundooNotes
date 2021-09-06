@@ -21,27 +21,43 @@ namespace Repository.Repository
         {
             try
             {
-                var checkEmail = this.userContext.Users.Where(x => x.Email.Equals(collaboratorData.CollaboratorEmailId)).FirstOrDefault();
-                var checkNote = this.userContext.Notes.Where(x => x.NoteId == collaboratorData.NoteId).FirstOrDefault();
-                //var result = from s in this.userContext.Users
-                //             join sa in this.userContext.Notes on s.UserId equals sa.UserId
-                //             where s.
-                if (collaboratorData != null)
-                {
-                    if (checkNote != null)
+                if (collaboratorData.SenderEmailId != collaboratorData.CollaboratorEmailId)
+                { 
+                    var checkEmailIdExists = this.userContext.Collaborator.Where(x => x.CollaboratorEmailId.Equals(collaboratorData.CollaboratorEmailId) && x.NoteId == collaboratorData.NoteId).FirstOrDefault();
+                    
+                    if (checkEmailIdExists == null)
                     {
-                        if (checkEmail != null)
-                        {
 
-                            this.userContext.Collaborator.Add(collaboratorData);
-                            this.userContext.SaveChanges();
-                            return "Collaborator Added Successfully";
-                        }
-                        return "Email id not registered";
+                        this.userContext.Collaborator.Add(collaboratorData);
+                        this.userContext.SaveChanges();
+                        return "Collaborator Added Successfully";
                     }
-                    return "Note not Found";
+
+                    return "Email Id Already Exists";
                 }
-                return "Collaborator Addedd Failed";
+
+                return "Invalid!! Can't add owner email id";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public string DeleteCollaborator(int noteId, int collaboratorId)
+        {
+            try
+            {
+                var checkCollaborator = this.userContext.Collaborator.Where(x => x.CollaboratorId.Equals(collaboratorId) && x.NoteId == noteId).SingleOrDefault();
+
+                if (checkCollaborator != null)
+                {
+
+                    this.userContext.Collaborator.Remove(checkCollaborator);
+                    this.userContext.SaveChanges();
+                    return "Collaborator Deleted Successfully";
+                }
+
+                return "Collaborator Email Id not found";
             }
             catch (Exception ex)
             {

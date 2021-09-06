@@ -8,5 +8,6 @@ namespace Repository.Interface
     public interface ICollaboratorRepository
     {
         string AddCollaborator(CollaboratorModel collaboratorData);
+        string DeleteCollaborator(int noteId, int collaboratorId);
     }
 }
