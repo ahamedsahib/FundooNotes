@@ -39,5 +39,17 @@ namespace Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
+
+        public bool DeleteLabelOnNote(int LabelId)
+        {
+            try
+            {
+                return this.repository.DeleteLabelOnNote(LabelId);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

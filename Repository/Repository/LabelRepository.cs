@@ -55,5 +55,24 @@ namespace Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public string DeleteLabelOnNote(LabelModel labelData)
+        {
+            try
+            {
+                var checkLabel = this.userContext.Labels.Where(x => x.UserId == labelData.UserId && x.LabelName.Equals(labelData.LabelName)).FirstOrDefault();
+                if (labelData == null)
+                {
+                    this.userContext.Labels.Add(labelData);
+                    this.userContext.SaveChanges();
+                    return "Label Added Successfully";
+                }
+
+                return "label added failed";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
