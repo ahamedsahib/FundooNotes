@@ -10,8 +10,8 @@ using Repository.Context;
 namespace Repository.Migrations
 {
     [DbContext(typeof(UserContext))]
-    [Migration("20210906112714_FundooLabels")]
-    partial class FundooLabels
+    [Migration("20210907054719_FundooNotesLabel")]
+    partial class FundooNotesLabel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -85,7 +85,7 @@ namespace Repository.Migrations
                     b.Property<int?>("NoteId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("LabelId");
@@ -155,7 +155,9 @@ namespace Repository.Migrations
 
                     b.HasOne("Fundoonotes.Models.RegisterModel", "RegisterModel")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Models.NotesModel", b =>

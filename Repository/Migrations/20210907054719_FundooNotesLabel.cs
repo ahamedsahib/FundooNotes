@@ -2,7 +2,7 @@
 
 namespace Repository.Migrations
 {
-    public partial class FundooLabels : Migration
+    public partial class FundooNotesLabel : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,7 +13,7 @@ namespace Repository.Migrations
                     LabelId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     NoteId = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: true),
+                    UserId = table.Column<int>(nullable: false),
                     LabelName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -30,7 +30,7 @@ namespace Repository.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

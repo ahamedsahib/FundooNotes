@@ -62,5 +62,16 @@ namespace Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
+        public bool EditLabelName(int userId, string existinglabelName, string newLabelName)
+        {
+            try
+            {
+                return this.repository.EditLabelName(userId, existinglabelName, newLabelName);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

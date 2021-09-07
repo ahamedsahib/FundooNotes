@@ -127,7 +127,7 @@ namespace Fundoonotes.Repostiory.Repository
                 throw new Exception(ex.Message);
             }
         }
-        
+
         /// <summary>
         /// Forgot the password.
         /// </summary>

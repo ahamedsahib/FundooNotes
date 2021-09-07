@@ -104,5 +104,27 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+
+        [HttpPut]
+        [Route("api/editLabelName")]
+        public IActionResult EditLabelName(int userId, string existinglabelName,string newLabelName)
+        {
+            try
+            {
+                bool result = this.manager.EditLabelName(userId, existinglabelName, newLabelName);
+                if (result)
+                {
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Label Name Edited Successfully" });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Edit Label Failed !! Label Not Exist" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }

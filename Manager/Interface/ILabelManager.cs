@@ -11,5 +11,6 @@ namespace Manager.Interface
         string AddLabelToUser(LabelModel labelData);
         bool DeleteLabelOnNote(int LabelId);
         bool DeleteLabel(int userId, string labelName);
+        bool EditLabelName(int userId, string existinglabelName, string newLabelName); 
     }
 }
