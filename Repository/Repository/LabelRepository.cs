@@ -114,5 +114,22 @@ namespace Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public List<string> GetLabels(int userId)
+        {
+            try
+            {
+                var labels = this.userContext.Labels.Where(x => x.UserId == userId).Select(i => i.LabelName).Distinct().ToList();
+                if (labels.Count > 0)
+                {
+                    return labels;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

@@ -114,11 +114,33 @@ namespace Fundoonotes.Controller.Controller
                 bool result = this.manager.EditLabelName(userId, existinglabelName, newLabelName);
                 if (result)
                 {
-                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Label Name Edited Successfully" });
+                    return this.Ok(new ResponseModel<string>() { Status = true, Message = "Label Name Updated Successfully" });
                 }
                 else
                 {
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Edit Label Failed !! Label Not Exist" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+
+        [HttpGet]
+        [Route("api/getLabels")]
+        public IActionResult GetLabels(int userId)
+        {
+            try
+            {
+                var result = this.manager.GetLabels(userId);
+                if (result.Count>0)
+                {
+                    return this.Ok(new ResponseModel<List<string>>() { Status = true, Message = "All Labels are fetched Successfully" ,Data=result});
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Getting Labels Failed" });
                 }
             }
             catch (Exception ex)

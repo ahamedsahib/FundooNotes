@@ -12,5 +12,6 @@ namespace Repository.Interface
         bool DeleteLabelOnNote(int LabelId);
         bool DeleteLabel(int userId, string labelName);
         bool EditLabelName(int userId, string existinglabelName, string newLabelName);
+        List<string> GetLabels(int userId);
     }
 }
