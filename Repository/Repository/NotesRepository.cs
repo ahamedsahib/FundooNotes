@@ -318,7 +318,7 @@ namespace Repository.Repository
                 var note = this.userContext.Notes.Where(x => x.NoteId == noteId && x.Trash == false).SingleOrDefault();
                 if(note !=null)
                 {
-                    Account account = new Account(this.configuration.GetSection("CloudinaryAccount").GetSection("CloudName").Value, this.configuration.GetValue<string>("CloudinaryAccount:ApiKey"), this.configuration.GetValue<string>("CloudinaryAccount:ApiSecret"));
+                    Account account = new Account(this.configuration.GetSection("CloudinaryAccount").GetSection("CloudName").Value, this.configuration.GetSection("CloudinaryAccount").GetSection("ApiKey").Value, this.configuration.GetSection("CloudinaryAccount").GetSection("ApiSecret").Value);
                     Cloudinary cloudinary = new Cloudinary(account);
 
                     var uploadParams = new ImageUploadParams()
