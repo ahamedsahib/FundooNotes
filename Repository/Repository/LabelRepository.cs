@@ -131,5 +131,25 @@ namespace Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+        public List<NotesModel> GetLabelsNotes(int userId, string labelName)
+        {
+            try
+            {
+                var labels = (from l in this.userContext.Labels
+                             join n in this.userContext.Notes on l.NoteId equals n.NoteId
+                             where (l.UserId == userId && l.LabelName.Equals(labelName)&& n.Trash == false)
+                             select n).ToList();
+                if(labels != null)
+                {
+                    return labels;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

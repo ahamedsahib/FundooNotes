@@ -148,5 +148,27 @@ namespace Fundoonotes.Controller.Controller
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
+
+        [HttpGet]
+        [Route("api/getLabelsNotes")]
+        public IActionResult GetLabelsNotes(int userId, string labelName)
+        {
+            try
+            {
+                var result = this.manager.GetLabelsNotes(userId, labelName);
+                if (result.Count > 0)
+                {
+                    return this.Ok(new ResponseModel<List<NotesModel>>() { Status = true, Message = "All Labels are fetched Successfully", Data = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Getting Labels Failed" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
     }
 }

@@ -84,5 +84,16 @@ namespace Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
+        public List<NotesModel> GetLabelsNotes(int userId, string labelName)
+        {
+            try
+            {
+                return this.repository.GetLabelsNotes(userId, labelName);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
