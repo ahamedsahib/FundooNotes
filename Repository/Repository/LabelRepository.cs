@@ -21,7 +21,10 @@ namespace Repository.Repository
         {
             try
             {
-                var checkLabel = this.userContext.Labels.Where(x => x.NoteId == labelData.NoteId && x.LabelName.Equals(labelData.LabelName)).SingleOrDefault();
+                var checkLabel = (from l in this.userContext.Labels
+                                  join n in this.userContext.Notes on labelData.NoteId equals n.NoteId
+                                  where (l.LabelName.Equals(labelData.LabelName) && l.UserId == labelData.UserId ||  n.Trash == true)
+                                  select n );
                 if (checkLabel == null)
                 {
                     this.userContext.Labels.Add(labelData);
