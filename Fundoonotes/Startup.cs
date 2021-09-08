@@ -95,9 +95,9 @@ namespace Fundoonotes
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.configuration["SecretKey"]))  
                 };
             });
-            services.AddStackExchangeRedisCache(options =>
-            {
-                options.Configuration = "localhost:6379";
+            services.AddDistributedMemoryCache();
+            services.AddSession(options => {
+                options.IdleTimeout = TimeSpan.FromMinutes(1);//You can set Time   
             });
         }
 

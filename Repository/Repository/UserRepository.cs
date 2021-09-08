@@ -21,6 +21,7 @@ namespace Fundoonotes.Repostiory.Repository
     using global::Repository.Context;
     using System.Text;
     using StackExchange.Redis;
+    using Microsoft.AspNetCore.Http;
 
     /// <summary>
     /// user repository class
@@ -37,6 +38,7 @@ namespace Fundoonotes.Repostiory.Repository
         /// The configuration
         /// </summary>
         private readonly IConfiguration configuration;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserRepository"/> class.

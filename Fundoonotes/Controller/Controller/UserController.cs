@@ -13,6 +13,7 @@ namespace Fundoonotes.Controller.Controller
     using global::Models;
     using Microsoft.Extensions.Logging;
     using StackExchange.Redis;
+    using Microsoft.AspNetCore.Http;
 
     /// <summary>
     /// UserController class
@@ -49,10 +50,15 @@ namespace Fundoonotes.Controller.Controller
         {
             try
             {
+                const string SessionName = "_Username";
+                const string SessionEmail = "_Email";
+
                 _logger.LogInformation("Register method called!!!");
                 string result = this.manager.Register(userData);
                 if (result.Equals("Registration Successfull"))
                 {
+                    HttpContext.Session.SetString(SessionName, userData.FirstName);
+                    HttpContext.Session.SetString(SessionEmail, userData.Email);
                     _logger.LogInformation($"{userData.FirstName} Registerd Succesfully");
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }

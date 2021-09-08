@@ -19,36 +19,34 @@ namespace Repository.Repository
 
         public string AddLabelToNote(LabelModel labelData)
         {
-            using var dbContextTransaction = userContext.Database.BeginTransaction();
+           
+            try
             {
-                try
+                var checkLabel = (from l in this.userContext.Labels
+                                    where (l.LabelName.Equals(labelData.LabelName) && labelData.UserId == l.UserId && l.NoteId == labelData.NoteId)
+                                    select l).FirstOrDefault();
+                if (checkLabel == null)
                 {
-                    var checkLabel = (from l in this.userContext.Labels
-                                      where (l.LabelName.Equals(labelData.LabelName) && labelData.UserId == l.UserId && l.NoteId == labelData.NoteId)
-                                      select l).FirstOrDefault();
-                    if (checkLabel == null)
+                    this.userContext.Labels.Add(labelData);
+                    this.userContext.SaveChanges();
+                    var checkLabel1 = this.userContext.Labels.Where(x => x.UserId == labelData.UserId && x.LabelName.Equals(labelData.LabelName) && x.NoteId == null).FirstOrDefault();
+                    if (checkLabel1 == null)
                     {
+                        labelData.LabelId = 0;
+                        labelData.NoteId = null;
                         this.userContext.Labels.Add(labelData);
                         this.userContext.SaveChanges();
-                        var checkLabel1 = this.userContext.Labels.Where(x => x.UserId == labelData.UserId && x.LabelName.Equals(labelData.LabelName) && x.NoteId == null).FirstOrDefault();
-                        if (checkLabel1 == null)
-                        {
-                            labelData.LabelId = 0;
-                            labelData.NoteId = null;
-                            this.userContext.Labels.Add(labelData);
-                            this.userContext.SaveChanges();
-                        }
-                        dbContextTransaction.Commit();
-                        return "Label Added Successfully";
                     }
-                    return "label added failed";
-                }
-                catch (Exception ex)
-                {
 
-                    throw new Exception(ex.Message);
+                    return "Label Added Successfully";
                 }
+
+                return "label added failed";
             }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }         
         }
         public string AddLabelToUser(LabelModel labelData)
         {
@@ -63,7 +61,6 @@ namespace Repository.Repository
                 }
 
                 return "label added failed";
-
             }
             catch (Exception ex)
             {
