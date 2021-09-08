@@ -12,6 +12,7 @@ namespace Fundoonotes.Controller.Controller
     using Microsoft.AspNetCore.Mvc;
     using global::Models;
     using Microsoft.Extensions.Logging;
+    using StackExchange.Redis;
 
     /// <summary>
     /// UserController class
@@ -81,9 +82,21 @@ namespace Fundoonotes.Controller.Controller
                 string result = this.manager.Login(userData);
                 if (result.Equals("Login Success"))
                 {
+                    ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+                    IDatabase database = connectionMultiplexer.GetDatabase();
+                    string FirstName = database.StringGet("FirstName");
+                    string LastName = database.StringGet("LastName");
+                    int UserId = Convert.ToInt32(database.StringGet("UserID"));
+                    RegisterModel data = new RegisterModel
+                    {
+                        FirstName = FirstName,
+                        LastName = LastName,
+                        UserId = UserId,
+                        Email = userData.Email
+                    };
                     _logger.LogInformation($"{userData.Email} Login Succesfully");
                     string tokenString = this.manager.GenerateToken(userData.Email);
-                    return this.Ok(new { Status = true, Message = result, tokenString, userData.Email });
+                    return this.Ok(new { Status = true, Message = result, tokenString, userData.Email ,UserData= data});
                 }
                 else
                 {
