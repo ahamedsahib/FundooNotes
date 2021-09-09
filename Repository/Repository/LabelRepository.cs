@@ -41,9 +41,9 @@ namespace Repository.Repository
         {
             try
             {
-                var checkLabel = (from l in this.userContext.Labels
-                                    where (l.LabelName.Equals(labelData.LabelName) && labelData.UserId == l.UserId && l.NoteId == labelData.NoteId)
-                                    select l).FirstOrDefault();
+                var checkLabel = (from label in this.userContext.Labels
+                                    where (label.LabelName.Equals(labelData.LabelName) && labelData.UserId == label.UserId && label.NoteId == labelData.NoteId)
+                                    select label).FirstOrDefault();
                 if (checkLabel == null)
                 {
                     this.userContext.Labels.Add(labelData);
@@ -204,10 +204,10 @@ namespace Repository.Repository
         {
             try
             {
-                var labels = (from l in this.userContext.Labels
-                             join n in this.userContext.Notes on l.NoteId equals n.NoteId
-                             where (l.UserId == userId && l.LabelName.Equals(labelName) && n.Trash == false)
-                             select n).ToList();
+                var labels = (from label in this.userContext.Labels
+                             join notes in this.userContext.Notes on label.NoteId equals notes.NoteId
+                             where (label.UserId == userId && label.LabelName.Equals(labelName))
+                             select notes).ToList();
                 if (labels != null)
                 {
                     return labels;

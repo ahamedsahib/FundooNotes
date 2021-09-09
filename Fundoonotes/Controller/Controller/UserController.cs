@@ -133,7 +133,7 @@ namespace Fundoonotes.Controller.Controller
             {
                 this.logger.LogInformation("Forgot Password method called!!!");
                 var result = this.manager.ForgotPassword(email);
-                if (result)
+               if (result)
                 {
                     this.logger.LogInformation($"{email} Got mail to Reset Password");
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "Check Your Mail" });
