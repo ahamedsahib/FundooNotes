@@ -122,7 +122,19 @@ namespace Manager.Interface
         /// <returns>Trash empty or not</returns>
         bool EmptyTrash(int userId);
 
+        /// <summary>
+        /// Adds the image.
+        /// </summary>
+        /// <param name="noteId">The note identifier.</param>
+        /// <param name="imagePath">The image path.</param>
+        /// <returns>true if image added </returns>
         bool AddImage(int noteId, IFormFile imagePath);
+
+        /// <summary>
+        /// Deletes the image.
+        /// </summary>
+        /// <param name="noteId">The note identifier.</param>
+        /// <returns>true if image deleted</returns>
         bool DeleteImage(int noteId);
     }
 }

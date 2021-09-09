@@ -1,22 +1,45 @@
-﻿using Models;
-using Repository.Context;
-using Repository.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CollaboratorRepository.cs" company="TVSNext">
+//   Copyright © 2021 Company="TVSNext"
+// </copyright>
+// <creator name="Ahamed"/>
+// ----------------------------------------------------------------------------------------------------------
 namespace Repository.Repository
 {
-    public class CollaboratorRepository: ICollaboratorRepository
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Models;
+    using global::Repository.Context;
+    using global::Repository.Interface;
+
+    /// <summary>
+    /// CollaboratorRepository class
+    /// </summary>
+    /// <seealso cref="Repository.Interface.ICollaboratorRepository" />
+    public class CollaboratorRepository : ICollaboratorRepository
     {
+        /// <summary>
+        /// The user context
+        /// </summary>
         private readonly UserContext userContext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CollaboratorRepository"/> class.
+        /// </summary>
+        /// <param name="userContext">The user context.</param>
         public CollaboratorRepository(UserContext userContext)
         {
             this.userContext = userContext;
         }
 
+        /// <summary>
+        /// Adds the collaborator.
+        /// </summary>
+        /// <param name="collaboratorData">The collaborator data.</param>
+        /// <returns>
+        /// return string success or not
+        /// </returns>
         public string AddCollaborator(CollaboratorModel collaboratorData)
         {
             try
@@ -27,7 +50,6 @@ namespace Repository.Repository
                     
                     if (checkEmailIdExists == null)
                     {
-
                         this.userContext.Collaborator.Add(collaboratorData);
                         this.userContext.SaveChanges();
                         return "Collaborator Added Successfully";
@@ -43,6 +65,15 @@ namespace Repository.Repository
                 throw new Exception(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Deletes the collaborator.
+        /// </summary>
+        /// <param name="noteId">The note identifier.</param>
+        /// <param name="collaboratorId">The collaborator identifier.</param>
+        /// <returns>
+        /// return string success or not
+        /// </returns>
         public string DeleteCollaborator(int noteId, int collaboratorId)
         {
             try
@@ -51,7 +82,6 @@ namespace Repository.Repository
 
                 if (checkCollaborator != null)
                 {
-
                     this.userContext.Collaborator.Remove(checkCollaborator);
                     this.userContext.SaveChanges();
                     return "Collaborator Deleted Successfully";
@@ -65,6 +95,13 @@ namespace Repository.Repository
             }
         }
 
+        /// <summary>
+        /// Gets the collaborator.
+        /// </summary>
+        /// <param name="noteId">The note identifier.</param>
+        /// <returns>
+        /// list of all Collaborator
+        /// </returns>
         public List<CollaboratorModel> GetCollaborator(int noteId)
         {
             try

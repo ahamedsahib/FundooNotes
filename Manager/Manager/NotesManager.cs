@@ -319,6 +319,15 @@ namespace Manager.Manager
                 throw new Exception(ex.Message);
             }
         }
+
+        /// <summary>
+        /// Adds the image.
+        /// </summary>
+        /// <param name="noteId">The note identifier.</param>
+        /// <param name="imagePath">The image path.</param>
+        /// <returns>
+        /// true if image added
+        /// </returns>
         public bool AddImage(int noteId, IFormFile imagePath)
         {
             try
@@ -331,6 +340,13 @@ namespace Manager.Manager
             }
         }
 
+        /// <summary>
+        /// Deletes the image.
+        /// </summary>
+        /// <param name="noteId">The note identifier.</param>
+        /// <returns>
+        /// true if image deleted
+        /// </returns>
         public bool DeleteImage(int noteId)
         {
             try

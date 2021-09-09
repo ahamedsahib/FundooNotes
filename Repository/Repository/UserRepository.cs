@@ -12,6 +12,7 @@ namespace Fundoonotes.Repostiory.Repository
     using System.Net;
     using System.Net.Mail;
     using System.Security.Claims;
+    using System.Text;
     using Experimental.System.Messaging;
     using Fundoonotes.Models;
     using Fundoonotes.Repostiory.Interface;
@@ -19,7 +20,7 @@ namespace Fundoonotes.Repostiory.Repository
     using Microsoft.IdentityModel.Tokens;
     using global::Models;
     using global::Repository.Context;
-    using System.Text;
+    using StackExchange.Redis;
 
     /// <summary>
     /// user repository class
@@ -113,6 +114,11 @@ namespace Fundoonotes.Repostiory.Repository
                 var login = this.userContext.Users.Where(x => x.Email.Equals(userData.Email) && x.Password.Equals(encodedPassword)).FirstOrDefault();
                 if (login != null)
                 {
+                    ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+                    IDatabase database = connectionMultiplexer.GetDatabase();
+                    database.StringSet(key: "FirstName", login.FirstName);
+                    database.StringSet(key: "LastName", login.LastName);
+                    database.StringSet(key: "UserID", login.UserId.ToString());
                     message = "Login Success";
                 }
                 else

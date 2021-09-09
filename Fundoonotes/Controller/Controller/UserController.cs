@@ -9,9 +9,11 @@ namespace Fundoonotes.Controller.Controller
     using System;
     using Fundoonotes.Manager.Interface;
     using Fundoonotes.Models;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
-    using global::Models;
     using Microsoft.Extensions.Logging;
+    using global::Models;
+    using StackExchange.Redis;
 
     /// <summary>
     /// UserController class
@@ -24,17 +26,20 @@ namespace Fundoonotes.Controller.Controller
         /// </summary>
         private readonly IUserManager manager;
 
-        private readonly ILogger<UserController> _logger;
-
+        /// <summary>
+        /// The logger
+        /// </summary>
+        private readonly ILogger<UserController> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserController"/> class.
         /// </summary>
         /// <param name="manager">The manager.</param>
+        /// <param name="logger">The logger.</param>
         public UserController(IUserManager manager, ILogger<UserController> logger)
         {
             this.manager = manager;
-            _logger = logger;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -48,20 +53,25 @@ namespace Fundoonotes.Controller.Controller
         {
             try
             {
-                _logger.LogInformation("Register method called!!!");
+                const string SessionName = "_Username";
+                const string SessionEmail = "_Email";
+
+                this.logger.LogInformation("Register method called!!!");
                 string result = this.manager.Register(userData);
                 if (result.Equals("Registration Successfull"))
                 {
-                    _logger.LogInformation($"{userData.FirstName} Registerd Succesfully");
+                    HttpContext.Session.SetString(SessionName, userData.FirstName);
+                    HttpContext.Session.SetString(SessionEmail, userData.Email);
+                    this.logger.LogInformation($"{userData.FirstName} Registerd Succesfully");
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = result });
                 }
                 
-                _logger.LogInformation("Registration Failed");
+                this.logger.LogInformation("Registration Failed");
                 return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("Some Error Occured while Registration");
+                this.logger.LogWarning("Some Error Occured while Registration");
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
@@ -77,23 +87,35 @@ namespace Fundoonotes.Controller.Controller
         {
             try
             {
-                _logger.LogInformation("Login method called!!!");
+                this.logger.LogInformation("Login method called!!!");
                 string result = this.manager.Login(userData);
                 if (result.Equals("Login Success"))
                 {
-                    _logger.LogInformation($"{userData.Email} Login Succesfully");
+                    ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect("127.0.0.1:6379");
+                    IDatabase database = connectionMultiplexer.GetDatabase();
+                    string firstName = database.StringGet("FirstName");
+                    string lastName = database.StringGet("LastName");
+                    int userId = Convert.ToInt32(database.StringGet("UserID"));
+                    RegisterModel data = new RegisterModel
+                    {
+                        FirstName = firstName,
+                        LastName = lastName,
+                        UserId = userId,
+                        Email = userData.Email
+                    };
+                    this.logger.LogInformation($"{userData.Email} Login Succesfully");
                     string tokenString = this.manager.GenerateToken(userData.Email);
-                    return this.Ok(new { Status = true, Message = result, tokenString, userData.Email });
+                    return this.Ok(new { Status = true, Message = result, tokenString, userData.Email, UserData = data });
                 }
                 else
                 {
-                    _logger.LogInformation("Login Failed");
+                    this.logger.LogInformation("Login Failed");
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = result });
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("Some Error Occured while Login");
+                this.logger.LogWarning("Some Error Occured while Login");
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
@@ -109,22 +131,22 @@ namespace Fundoonotes.Controller.Controller
         {
             try
             {
-                _logger.LogInformation("Forgot Password method called!!!");
+                this.logger.LogInformation("Forgot Password method called!!!");
                 var result = this.manager.ForgotPassword(email);
                 if (result)
                 {
-                    _logger.LogInformation($"{email} Got mail to Reset Password");
+                    this.logger.LogInformation($"{email} Got mail to Reset Password");
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "Check Your Mail" });
                 }
                 else
                 {
-                    _logger.LogInformation("Error ! Email Id Not found to Reset Password");
+                    this.logger.LogInformation("Error ! Email Id Not found to Reset Password");
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Error !!Email Id Not found Or Incorrect" });
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("Some Error Occured while Changing Password");
+                this.logger.LogWarning("Some Error Occured while Changing Password");
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
@@ -140,22 +162,22 @@ namespace Fundoonotes.Controller.Controller
         {
             try
             {
-                _logger.LogInformation("Reset Password method called!!!");
+                this.logger.LogInformation("Reset Password method called!!!");
                 bool result = this.manager.ResetPassword(userData);
                 if (result)
                 {
-                    _logger.LogInformation($"{userData.Email} Reset Password Succesfully");
+                    this.logger.LogInformation($"{userData.Email} Reset Password Succesfully");
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "Password Succesfully Updated" });
                 }
                 else
                 {
-                    _logger.LogInformation("Error ! Email Id Not found to Reset Password");
+                    this.logger.LogInformation("Error ! Email Id Not found to Reset Password");
                     return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Some Error Ocuured!!Try again" });
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("Some Error Occured while Resting Password");
+                this.logger.LogWarning("Some Error Occured while Resting Password");
                 return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
             }
         }
