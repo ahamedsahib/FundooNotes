@@ -9,6 +9,7 @@ namespace Fundoonotes.Controller.Controller
     using System;
     using System.Collections.Generic;
     using global::Manager.Manager;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using global::Models;
 
@@ -16,6 +17,7 @@ namespace Fundoonotes.Controller.Controller
     /// CollaboratorController class
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
+    [Authorize]
     public class CollaboratorController : ControllerBase
     {
         /// <summary>

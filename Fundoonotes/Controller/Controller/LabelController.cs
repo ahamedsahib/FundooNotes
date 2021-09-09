@@ -9,6 +9,7 @@ namespace Fundoonotes.Controller.Controller
     using System;
     using System.Collections.Generic;
     using global::Manager.Interface;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using global::Models;
 
@@ -16,6 +17,7 @@ namespace Fundoonotes.Controller.Controller
     /// LabelController class
     /// </summary>
     /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
+    [Authorize]
     public class LabelController : ControllerBase
     {
         /// <summary>
@@ -116,16 +118,15 @@ namespace Fundoonotes.Controller.Controller
         /// <summary>
         /// Deletes the label.
         /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="labelName">Name of the label.</param>
+        /// <param name="labelData">The label data.</param>
         /// <returns>return true if Label Deleted Successfully</returns>
         [HttpDelete]
         [Route("api/deleteLabel")]
-        public IActionResult DeleteLabel(int userId, string labelName)
+        public IActionResult DeleteLabel([FromBody] LabelModel labelData)
         {
             try
             {
-                bool result = this.manager.DeleteLabel(userId, labelName);
+                bool result = this.manager.DeleteLabel(labelData);
                 if (result)
                 {
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "Label Deleted Successfully" });
@@ -144,17 +145,15 @@ namespace Fundoonotes.Controller.Controller
         /// <summary>
         /// Edits the name of the label.
         /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="existinglabelName">Name of the existing label.</param>
-        /// <param name="newLabelName">New name of the label.</param>
-        /// <returns>return true if Label Edited Successfully</returns>
+        /// <param name="labelData">The label data.</param>
+        /// <returns>return true if Label updated Successfully</returns>
         [HttpPut]
         [Route("api/editLabelName")]
-        public IActionResult EditLabelName(int userId, string existinglabelName, string newLabelName)
+        public IActionResult EditLabelName([FromBody]LabelModel labelData)
         {
             try
             {
-                bool result = this.manager.EditLabelName(userId, existinglabelName, newLabelName);
+                bool result = this.manager.EditLabelName(labelData);
                 if (result)
                 {
                     return this.Ok(new ResponseModel<string>() { Status = true, Message = "Label Name Updated Successfully" });
@@ -200,19 +199,45 @@ namespace Fundoonotes.Controller.Controller
         /// <summary>
         /// Gets the labels notes.
         /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="labelName">Name of the label.</param>
+        /// <param name="labelData">The label data.</param>
         /// <returns>all notes attach with the label</returns>
         [HttpGet]
         [Route("api/getLabelsNotes")]
-        public IActionResult GetLabelsNotes(int userId, string labelName)
+        public IActionResult GetLabelsNotes([FromBody] LabelModel labelData)
         {
             try
             {
-                var result = this.manager.GetLabelsNotes(userId, labelName);
+                var result = this.manager.GetLabelsNotes(labelData);
                 if (result.Count > 0)
                 {
                     return this.Ok(new ResponseModel<List<NotesModel>>() { Status = true, Message = "All Labels are fetched Successfully", Data = result });
+                }
+                else
+                {
+                    return this.BadRequest(new ResponseModel<string>() { Status = false, Message = "Getting Labels Failed" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return this.NotFound(new ResponseModel<string>() { Status = false, Message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Gets the notes label.
+        /// </summary>
+        /// <param name="noteId">The note identifier.</param>
+        /// <returns>list of labels</returns>
+        [HttpGet]
+        [Route("api/getNotesLabel")]
+        public IActionResult GetNotesLabel(int noteId)
+        {
+            try
+            {
+                var result = this.manager.GetNotesLabel(noteId);
+                if (result.Count > 0)
+                {
+                    return this.Ok(new ResponseModel<List<LabelModel>>() { Status = true, Message = "All Labels are fetched Successfully", Data = result });
                 }
                 else
                 {

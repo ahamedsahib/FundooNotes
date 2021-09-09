@@ -99,11 +99,11 @@ namespace Repository.Repository
         /// <param name="userId">The user identifier.</param>
         /// <param name="labelName">Name of the label.</param>
         /// <returns>return true if success</returns>
-        public bool DeleteLabel(int userId, string labelName)
+        public bool DeleteLabel(LabelModel labelData)
         {
             try
             {
-                var checkLabel = this.userContext.Labels.Where(x => x.UserId == userId && x.LabelName.Equals(labelName)).ToList();
+                var checkLabel = this.userContext.Labels.Where(x => x.UserId ==labelData.UserId && x.LabelName.Equals(labelData.LabelName)).ToList();
                 if (checkLabel != null)
                 {
                     this.userContext.Labels.RemoveRange(checkLabel);
@@ -147,18 +147,17 @@ namespace Repository.Repository
         /// <summary>
         /// Edits the name of the label.
         /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="existinglabelName">Name of the existing label.</param>
-        /// <param name="newLabelName">New name of the label.</param>
-        /// <returns>return true if success</returns>
-        public bool EditLabelName(int userId, string existinglabelName, string newLabelName)
+        /// <param name="labelData"></param>
+        /// <returns>true if label updated</returns>
+        public bool EditLabelName(LabelModel labelData)
         {
             try
             {
-                var checkLabel = this.userContext.Labels.Where(x => x.UserId == userId && x.LabelName.Equals(existinglabelName)).ToList();
+                var changeLabel = this.userContext.Labels.Find(labelData.LabelId);
+                var checkLabel = this.userContext.Labels.Where(x => x.UserId ==labelData.UserId && x.LabelName.Equals(changeLabel.LabelName)).ToList();
                 if (checkLabel != null)
                 {
-                    checkLabel.ForEach(a => a.LabelName = newLabelName);
+                    checkLabel.ForEach(a => a.LabelName = labelData.LabelName);
                     this.userContext.SaveChanges();
                     return true;
                 }
@@ -200,15 +199,38 @@ namespace Repository.Repository
         /// <param name="userId">The user identifier.</param>
         /// <param name="labelName">Name of the label.</param>
         /// <returns>all notes of labels</returns>
-        public List<NotesModel> GetLabelsNotes(int userId, string labelName)
+        public List<NotesModel> GetLabelsNotes(LabelModel labelData)
         {
             try
             {
                 var labels = (from label in this.userContext.Labels
                              join notes in this.userContext.Notes on label.NoteId equals notes.NoteId
-                             where (label.UserId == userId && label.LabelName.Equals(labelName))
+                             where (label.UserId == labelData.UserId && label.LabelName.Equals(labelData.LabelName))
                              select notes).ToList();
                 if (labels != null)
+                {
+                    return labels;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        /// <summary>
+        ///  get Notes label
+        /// </summary>
+        /// <param name="noteId"></param>
+        /// <returns>list of labels for note</returns>
+        public List<LabelModel> GetNotesLabel(int noteId)
+        {
+            try
+            {
+                var labels = this.userContext.Labels.Where(x => x.NoteId == noteId).ToList();
+                if (labels.Count != 0)
                 {
                     return labels;
                 }
