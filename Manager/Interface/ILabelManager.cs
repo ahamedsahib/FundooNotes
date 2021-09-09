@@ -38,19 +38,16 @@ namespace Manager.Interface
         /// <summary>
         /// Deletes the label.
         /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="labelName">Name of the label.</param>
+        /// <param name="labelData">The label data.</param>
         /// <returns>return true if success</returns>
-        bool DeleteLabel(int userId, string labelName);
+        bool DeleteLabel(LabelModel labelData);
 
         /// <summary>
         /// Edits the name of the label.
         /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="existinglabelName">Name of the existing label.</param>
-        /// <param name="newLabelName">New name of the label.</param>
+        /// <param name="labelData">The label data.</param>
         /// <returns>return true if success</returns>
-        bool EditLabelName(int userId, string existinglabelName, string newLabelName);
+        bool EditLabelName(LabelModel labelData);
 
         /// <summary>
         /// Gets the labels.
@@ -62,9 +59,15 @@ namespace Manager.Interface
         /// <summary>
         /// Gets the labels notes.
         /// </summary>
-        /// <param name="userId">The user identifier.</param>
-        /// <param name="labelName">Name of the label.</param>
+        /// <param name="labelData">The label data.</param>
         /// <returns>all notes of labels</returns>
-        List<NotesModel> GetLabelsNotes(int userId, string labelName);
+        List<NotesModel> GetLabelsNotes(LabelModel labelData);
+
+        /// <summary>
+        /// Gets the notes label.
+        /// </summary>
+        /// <param name="noteId">The note identifier.</param>
+        /// <returns>list of Labels of note</returns>
+        List<LabelModel> GetNotesLabel(int noteId);
     }
 }

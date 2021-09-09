@@ -18,7 +18,7 @@ namespace Fundoonotes.Controller.Controller
     /// <summary>
     /// NoteController class
     /// </summary>
-    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />
+    /// <seealso cref="Microsoft.AspNetCore.Mvc.ControllerBase" />  
     [Authorize]
     public class NoteController : ControllerBase
     {
