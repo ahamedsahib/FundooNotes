@@ -12,6 +12,7 @@ namespace Fundoonotes.Repostiory.Repository
     using System.Net;
     using System.Net.Mail;
     using System.Security.Claims;
+    using System.Text;
     using Experimental.System.Messaging;
     using Fundoonotes.Models;
     using Fundoonotes.Repostiory.Interface;
@@ -19,9 +20,7 @@ namespace Fundoonotes.Repostiory.Repository
     using Microsoft.IdentityModel.Tokens;
     using global::Models;
     using global::Repository.Context;
-    using System.Text;
     using StackExchange.Redis;
-    using Microsoft.AspNetCore.Http;
 
     /// <summary>
     /// user repository class
@@ -38,7 +37,6 @@ namespace Fundoonotes.Repostiory.Repository
         /// The configuration
         /// </summary>
         private readonly IConfiguration configuration;
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserRepository"/> class.
